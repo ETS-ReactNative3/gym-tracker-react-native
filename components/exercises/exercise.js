@@ -5,13 +5,19 @@ import Reps from './reps'
 export default class ExercisePage extends Component {
     constructor(props) {
         super(props)
-
+        this.state={
+            numberOfRepsComponents: [1, 2, 3]
+        }
         this.addExtraReps = this.addExtraReps.bind(this)
     }
 
-    addExtraReps() {
-        console.log("Add extra reps")
+    addExtraReps() { 
         
+        this.setState({
+            numberOfRepsComponents: [...this.state.numberOfRepsComponents, this.state.numberOfRepsComponents.length + 1]
+        })
+        
+
     }
 
     render() {
@@ -21,9 +27,9 @@ export default class ExercisePage extends Component {
                     <Text style={styles.header}>Bench Press</Text>
                 </View>
                 <View style={styles.container}>
-                    <Reps style={styles.reps} />
-                    <Reps style={styles.reps} />
-                    <Reps style={styles.reps} />
+                    {this.state.numberOfRepsComponents.map((id)=> {
+                        return <Reps id={id} key={id} style={styles.reps}/>
+                    })}
                     <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
                 </View>
             </View>
