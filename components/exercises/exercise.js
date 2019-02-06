@@ -42,6 +42,8 @@ export default class ExercisePage extends Component {
             <View>
                 <View style={styles.containerHeader}>
                     <Text style={styles.header}>Bench Press</Text>
+                    {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
+                    <View style={styles.imageBox}/>
                 </View>
                 <View style={this.repsContainerStyleing()}>
                     {this.state.numberOfRepsComponents.map((id)=> {
@@ -60,18 +62,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignSelf: 'flex-start',
         width: '100%',
-        backgroundColor: 'green',
         padding: 20
     },
-    // container: {
-    //     flexDirection: 'column',
-    //     justifyContent: 'space-around',
-    //     paddingTop: 20,
-    //     paddingBottom: 20,
-    //     margin: 0,
-    //     height: this.state.containerHeight,
-    // },
-   
+    imageBox: {
+        height: 200,
+        width: 200,
+        backgroundColor: 'black',
+        marginTop: 20
+    },
     header: {
         fontSize: 20,
         fontWeight: 'bold',

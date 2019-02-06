@@ -23,6 +23,7 @@ export default class Record extends Component {
             <View style={styles.container}>
                 <Text>Reps:</Text><TextInput name="reps" onChangeText={(e)=>{this.setState({reps: e})}} value={this.state.reps}/>
                 <Text>Weight (kg)</Text><TextInput name="weight" onChangeText={(e)=>{this.setState({weight: e})}} value={this.state.weight}/>
+                
             </View>
         )
     }
