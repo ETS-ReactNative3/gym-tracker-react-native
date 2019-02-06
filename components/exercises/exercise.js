@@ -5,27 +5,27 @@ import Reps from './reps'
 export default class ExercisePage extends Component {
     constructor(props) {
         super(props)
-        this.state={
+        this.state = {
             numberOfRepsComponents: [1, 2, 3],
-            containerHeight: 200
+            containerHeight: 250
         }
         this.addExtraReps = this.addExtraReps.bind(this)
-        this.repsContainerStyleing = this.repsContainerStyleing.bind(this)
+        this.repsContainerStyling = this.repsContainerStyling.bind(this)
     }
 
-    addExtraReps() { 
-        if(this.state.numberOfRepsComponents.length <= 7) {
+    addExtraReps() {
+        if (this.state.numberOfRepsComponents.length <= 7) {
             this.setState({
                 numberOfRepsComponents: [...this.state.numberOfRepsComponents, this.state.numberOfRepsComponents.length + 1],
                 containerHeight: this.state.containerHeight + 30
             })
-           
+
         } else {
             console.log("Can't have more than 8 reps")
         }
     }
 
-    repsContainerStyleing = () => {
+    repsContainerStyling = () => {
         const containerHeightStyle = this.state.containerHeight
         return {
             flexDirection: 'column',
@@ -43,13 +43,17 @@ export default class ExercisePage extends Component {
                 <View style={styles.containerHeader}>
                     <Text style={styles.header}>Bench Press</Text>
                     {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
-                    <View style={styles.imageBox}/>
+                    <View style={styles.imageBox} />
                 </View>
-                <View style={this.repsContainerStyleing()}>
-                    {this.state.numberOfRepsComponents.map((id)=> {
-                        return <Reps id={id} key={id} style={styles.reps}/>
+                <View style={this.repsContainerStyling()}>
+                    {this.state.numberOfRepsComponents.map((id) => {
+                        return <Reps id={id} key={id} style={styles.reps} />
                     })}
                     <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
+                    <View style={styles.buttonRow}>
+                        <Button title="Timer" />
+                        <Button title="Notes" />
+                    </View>
                 </View>
             </View>
 
@@ -81,7 +85,13 @@ const styles = StyleSheet.create({
         padding: 0,
         flexWrap: 'nowrap',
     },
-    buttonAdd: {
-        width: '10px'
-    }
+    
+    buttonRow: {
+        flexDirection: 'row',
+        paddingTop: 10,
+        paddingBottom: 10,
+        justifyContent: 'space-evenly'
+
+    },
+
 });
