@@ -11,6 +11,8 @@ export default class ExercisePage extends Component {
         }
         this.addExtraReps = this.addExtraReps.bind(this)
         this.repsContainerStyling = this.repsContainerStyling.bind(this)
+        this.removeReps = this.removeReps.bind(this)
+        this.saveReps = this.saveReps.bind(this)
     }
 
     addExtraReps() {
@@ -19,9 +21,24 @@ export default class ExercisePage extends Component {
                 numberOfRepsComponents: [...this.state.numberOfRepsComponents, this.state.numberOfRepsComponents.length + 1],
                 containerHeight: this.state.containerHeight + 30
             })
-
         } else {
             console.log("Can't have more than 8 reps")
+        }
+    }
+
+    // Removes the last rep component line if there are more than 3
+    removeReps() {
+        if (this.state.numberOfRepsComponents.length <= 3) {
+            return console.log("There aren't any reps components to remove")
+        } else {
+            console.log("Removing reps")
+            const newState = this.state.numberOfRepsComponents
+            newState.pop()
+
+            this.setState({
+                numberOfRepsComponents: newState,
+                containerHeight: this.state.containerHeight - 30
+            })
         }
     }
 
@@ -36,6 +53,10 @@ export default class ExercisePage extends Component {
             height: containerHeightStyle,
         }
     }
+    
+    saveReps() {
+        console.log("Saving reps")
+    }
 
     render() {
         return (
@@ -47,10 +68,11 @@ export default class ExercisePage extends Component {
                 </View>
                 <View style={this.repsContainerStyling()}>
                     {this.state.numberOfRepsComponents.map((id) => {
-                        return <Reps id={id} key={id} style={styles.reps} />
+                        return <Reps id={id} key={id} style={styles.reps} removeReps={this.removeReps} />
                     })}
-                    <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
+                    <Button title="Save" onPress={this.saveReps} />
                     <View style={styles.buttonRow}>
+                        <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
                         <Button title="Timer" />
                         <Button title="Notes" />
                     </View>
