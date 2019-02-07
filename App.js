@@ -4,12 +4,14 @@ import Record from './components/exercises/reps';
 import ExercisePage from './components/exercises/exercise'
 
 
+
 // type Props = {};
 export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
         <ExercisePage />
+       
       </View>
     );
   }

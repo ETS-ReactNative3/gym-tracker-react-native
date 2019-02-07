@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "react-devtool": "react-devtools"
   },
   "dependencies": {
     "react": "16.6.3",
@@ -15,6 +16,7 @@
     "babel-jest": "24.0.0",
     "jest": "24.0.0",
     "metro-react-native-babel-preset": "0.51.1",
+    "react-devtools": "^3.6.0",
     "react-test-renderer": "16.6.3"
   },
   "jest": {

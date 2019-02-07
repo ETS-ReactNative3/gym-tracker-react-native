@@ -1,19 +1,28 @@
 import React, { Component } from 'react'
 import { View, TextInput, Text, Button, StyleSheet } from 'react-native';
 import Reps from './reps'
+import Timer from '../timer/timer'
 
 export default class ExercisePage extends Component {
     constructor(props) {
         super(props)
         this.state = {
             numberOfRepsComponents: [1, 2, 3],
-            containerHeight: 250
+            containerHeight: 250,
+            repRecord: [],
+            modalVisible: false,
         }
         this.addExtraReps = this.addExtraReps.bind(this)
         this.repsContainerStyling = this.repsContainerStyling.bind(this)
         this.removeReps = this.removeReps.bind(this)
         this.saveReps = this.saveReps.bind(this)
+        this.saveRepRow = this.saveRepRow.bind(this)
+        this.setModalVisible = this.setModalVisible.bind(this)
     }
+
+    setModalVisible() {
+        this.setState({modalVisible: !this.state.modalVisible});
+      }
 
     addExtraReps() {
         if (this.state.numberOfRepsComponents.length <= 7) {
@@ -53,9 +62,21 @@ export default class ExercisePage extends Component {
             height: containerHeightStyle,
         }
     }
+    saveRepRow(repRow, id) {
+       repRow.date = Date.now()
+        this.setState({
+            repRecordTemp: { [id]: repRow }
+        })
+    }
     
+    // Need to make sure each rep record line is unique (using id) overwriting the old value.
     saveReps() {
-        console.log("Saving reps")
+        this.setState({
+            repRecord: [...this.state.repRecord, this.state.repRecordTemp]
+        })
+        console.log(this.state.repRecord)
+
+        // LAUNCH TIMER COMPONENT
     }
 
     render() {
@@ -68,15 +89,16 @@ export default class ExercisePage extends Component {
                 </View>
                 <View style={this.repsContainerStyling()}>
                     {this.state.numberOfRepsComponents.map((id) => {
-                        return <Reps id={id} key={id} style={styles.reps} removeReps={this.removeReps} />
+                        return <Reps id={id} key={id} style={styles.reps} removeReps={this.removeReps} addRepRow={(repRow) => this.saveRepRow(repRow, id)} />
                     })}
                     <Button title="Save" onPress={this.saveReps} />
                     <View style={styles.buttonRow}>
                         <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
-                        <Button title="Timer" />
+                        <Button title="Timer" onPress={this.setModalVisible} />
                         <Button title="Notes" />
                     </View>
                 </View>
+                <Timer setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible}/>
             </View>
 
         )

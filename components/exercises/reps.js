@@ -18,19 +18,27 @@ export default class RecordLine extends Component {
     calculateOneRepMax() {
         const weight = parseInt(this.state.weight)
         const reps = parseInt(this.state.reps)
-        const total = weight * 36 / (37 - reps) * 10
+        const constant = 37.0 / 36.0
+
+        const total = (weight / (constant - (1.0 / 36.0 * reps)))
+
         this.setState({
-            oneRepMax: Math.round(total)
-        })
+            oneRepMax: Math.floor(total)
+        }, () => { this.props.addRepRow(this.state) })
+        
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>Reps:</Text><TextInput keyboardType='numeric' name="reps" onChangeText={(e) => { this.setState({ reps: e }) }} value={this.state.reps} />
+
+                <Text>Reps:</Text><TextInput keyboardType='numeric' name="reps" onChangeText={(e) => {
+                    this.setState({ reps: e }, () => { this.calculateOneRepMax() })
+                }} value={this.state.reps} />
+
                 <Text>Weight (kg)</Text><TextInput keyboardType='numeric' name="weight" onChangeText={(e) => {
-                    this.setState({ weight: e })
-                    this.calculateOneRepMax()
+                    this.setState({ weight: e }, () => { this.calculateOneRepMax() })
+
                 }} value={this.state.weight} />
                 <Text style={styles.oneRepMaxText}>{this.state.oneRepMax}kg 1RM</Text>
 
