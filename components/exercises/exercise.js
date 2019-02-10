@@ -21,8 +21,8 @@ export default class ExercisePage extends Component {
     }
 
     setModalVisible() {
-        this.setState({modalVisible: !this.state.modalVisible});
-      }
+        this.setState({ modalVisible: !this.state.modalVisible });
+    }
 
     addExtraReps() {
         if (this.state.numberOfRepsComponents.length <= 7) {
@@ -63,12 +63,12 @@ export default class ExercisePage extends Component {
         }
     }
     saveRepRow(repRow, id) {
-       repRow.date = Date.now()
+        repRow.date = Date.now()
         this.setState({
             repRecordTemp: { [id]: repRow }
         })
     }
-    
+
     // Need to make sure each rep record line is unique (using id) overwriting the old value.
     saveReps() {
         this.setState({
@@ -77,6 +77,7 @@ export default class ExercisePage extends Component {
         console.log(this.state.repRecord)
 
         // LAUNCH TIMER COMPONENT
+        this.setModalVisible()
     }
 
     render() {
@@ -98,7 +99,7 @@ export default class ExercisePage extends Component {
                         <Button title="Notes" />
                     </View>
                 </View>
-                <Timer setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible}/>
+                <Timer setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} />
             </View>
 
         )
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
         padding: 0,
         flexWrap: 'nowrap',
     },
-    
+
     buttonRow: {
         flexDirection: 'row',
         paddingTop: 10,
