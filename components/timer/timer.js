@@ -21,28 +21,20 @@ export default class TimerModal extends Component {
                 length: prevState.length - 1
             }))
         } else {
-            clearInterval(this.interval)
-            this.props.setModalVisible()
-            
-        }
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => this.countdown(), 1000);
-        console.log("Timer launched", "Timer length is: ", this.state.length)
-
-        if (this.props.timerLength < 1) {
-            console.log("componentDidMount 1 LAUNCHED")
             this.setState({
                 length: this.state.defaultLength
             })
-            console.log("componentDidMount 2 LAUNCHED")
-        } else {
-            return console.log("Timer length is: ", this.state.length)
-        }
+            clearInterval(this.interval)
+            this.props.setModalVisible()
 
-        
+        }
     }
+
+    // componentDidMount() {
+    //     this.interval = setInterval(() => this.countdown(), 1000);
+    //     console.log("Timer launched", "Timer length is: ", this.state.length)
+
+    // }
 
     componentWillUnmount() {
         clearInterval(this.interval);
@@ -52,6 +44,8 @@ export default class TimerModal extends Component {
         return (
             <View style={{ marginTop: 22 }}>
                 <Modal
+                    onShow={() => {this.interval = setInterval(() => this.countdown(), 1000)}}
+                    onDismiss={() =>  clearInterval(this.interval)}
                     animationType="slide"
                     transparent={false}
                     visible={this.props.modalVisible}
@@ -65,16 +59,27 @@ export default class TimerModal extends Component {
                             <Text style={styles.seconds}>seconds remaining</Text>
 
                             <TextInput style={styles.inputLength} keyboardType='numeric' name="timerLength" onChangeText={(e) => {
+                                clearInterval(this.interval)
                                 this.setState({
-                                    length: e
+                                    length: e,
+                                    defaultLength: e
                                 })
                             }} />
 
-                            <Button onPress={this.props.setModalVisible} title='Start' style={styles.button} onPress={() => this.interval = setInterval(() => this.countdown(), 1000)} />
+                            <Button onPress={this.props.setModalVisible} title='Start' style={styles.button} onPress={() => {
+                                clearInterval(this.interval)
+                                this.interval = setInterval(() => this.countdown(), 1000)
+                                }} />
 
-                            <Button title='Stop' style={styles.button} onPress={() => clearInterval(this.interval)} />
+                            <Button title='Stop' style={styles.button} onPress={() => {
+                                
+                                clearInterval(this.interval)
+                            }} />
 
                             <Button onPress={() => {
+                                this.setState({
+                                    length: this.state.defaultLength
+                                })
                                 clearInterval(this.interval)
                                 this.props.setModalVisible()
                             }} title='Close' style={[styles.cancel, styles.button]} />
