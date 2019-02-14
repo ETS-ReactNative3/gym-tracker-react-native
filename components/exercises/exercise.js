@@ -37,7 +37,7 @@ export default class ExercisePage extends Component {
 
     // Removes the last rep component line if there are more than 3
     removeReps() {
-        if (this.state.numberOfRepsComponents.length <= 3) {
+        if (this.state.numberOfRepsComponents.length <= 2) {
             return console.log("There aren't any reps components to remove")
         } else {
             console.log("Removing reps")
@@ -84,7 +84,7 @@ export default class ExercisePage extends Component {
         return (
             <View>
                 <View style={styles.containerHeader}>
-                    <Text style={styles.header}>Bench Press</Text>
+                    <Text style={styles.header}>{this.props.exerciseName}</Text>
                     {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
                     <View style={styles.imageBox} />
                 </View>
