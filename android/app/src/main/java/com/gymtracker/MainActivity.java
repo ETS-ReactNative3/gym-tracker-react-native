@@ -15,9 +15,9 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "GymTracker";
     }
-}
-@Override
-  protected ReactActivityDelegate createReactActivityDelegate() {
+
+    @Override
+protected ReactActivityDelegate createReactActivityDelegate() {
     return new ReactActivityDelegate(this, getMainComponentName()) {
       @Override
       protected ReactRootView createRootView() {
@@ -25,3 +25,4 @@ public class MainActivity extends ReactActivity {
       }
     };
   }
+}

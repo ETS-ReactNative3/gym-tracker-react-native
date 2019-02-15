@@ -3,6 +3,8 @@ import { View, TextInput, Text, Button, StyleSheet } from 'react-native';
 import Reps from './reps'
 import Timer from '../timer/timer'
 
+
+
 export default class ExercisePage extends Component {
     constructor(props) {
         super(props)
@@ -81,10 +83,12 @@ export default class ExercisePage extends Component {
     }
 
     render() {
+        const { navigation } = this.props;
+        const exerciseNameProp = navigation.getParam('exerciseName', 'No Name Provided');
         return (
             <View>
                 <View style={styles.containerHeader}>
-                    <Text style={styles.header}>{this.props.exerciseName}</Text>
+                    <Text style={styles.header}>{exerciseNameProp}</Text>
                     {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
                     <View style={styles.imageBox} />
                 </View>

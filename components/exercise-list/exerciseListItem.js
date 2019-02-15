@@ -1,12 +1,14 @@
 import React from 'react'
-import { Text, View, StyleSheet} from 'react-native'
+import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native'
 
-const ExerciseListItem = (props) => {
+const ExerciseListItem = ( props ) => {
 
     return (
-        <View>
-            <Text style={styles.items} >{props.exerciseName}</Text>
-        </View>
+        <TouchableNativeFeedback onPress={props.pressMe}>
+            <View>
+                <Text style={styles.items} >{props.exerciseName}</Text>
+            </View>
+        </TouchableNativeFeedback>
     )
 
 }
@@ -21,7 +23,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 2,
         margin: 10,
-        
+
     },
     imageBox: {
         height: 200,
