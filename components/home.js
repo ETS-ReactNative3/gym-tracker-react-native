@@ -10,18 +10,17 @@ export default class Home extends Component {
         return (
             <View style={styles.container}>
                 {/* <ExercisePage /> */}
-                {/* <ExerciseList /> */}
-                <View>
+                <ExerciseList navigate={this.props.navigation.navigate}/>
+                {/* <View>
                     
                     <ExerciseListItem exerciseName={"Squat"} pressMe={() => this.props.navigation.navigate('Exercises', {
                         exerciseName: "Squat baby!"
                     })}/>
-                  
 
                     <ExerciseListItem exerciseName={"Squat"} />
                     <ExerciseListItem exerciseName={"Lateral extensions"} />
                     
-                </View>
+                </View> */}
             </View>
         );
     }

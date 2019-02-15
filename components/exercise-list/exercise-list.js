@@ -8,32 +8,41 @@ export class ExerciseList extends Component {
         super(props)
         this.state = {
             exercises: [
-                { name: "Benchpress" },
-                { name: "Squat" },
-                { name: "Lateral extensions"}
+                "Benchpress",
+                "Squat",
+                "Lateral extensions"
             ]
+
+
         }
     }
 
 
     render() {
+        const navigate = this.props.navigate
         return (
             <View>
                 <View>
                     <Text style={styles.header}>List of Exercises</Text>
                 </View>
                 <View>
-                    {/* {this.state.exercises.map((ex) => {
+                    {this.state.exercises.map((ex) => {
                         console.log(ex)
-                        return <ExerciseListItem exerciseName={ex.name} key={Date.now()} />
-                    })} */}
+                        return <ExerciseListItem exerciseName={ex} key={Date.now()} pressMe={() => navigate('Exercises', {
+                            exerciseName: ex
+                        })} />
+                    })}
 
                 </View>
-                <View>
+                {/* <View>
                     <ExerciseListItem exerciseName={"Benchpress"} />
+                    <ExerciseListItem exerciseName={"Squat"} pressMe={() => navigate('Exercises', {
+                        exerciseName: "Squat baby!"
+                    })}/>
+
                     <ExerciseListItem exerciseName={"Squat"} />
                     <ExerciseListItem exerciseName={"Lateral extensions"} />
-                </View>
+                </View> */}
             </View>
         )
     }
