@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
 import ExerciseListItem from './exerciseListItem'
 
 
@@ -10,7 +10,10 @@ export class ExerciseList extends Component {
             exercises: [
                 "Benchpress",
                 "Squat",
-                "Lateral extensions"
+                "Lateral extensions",
+                "Bicep curls",
+                "Tricep extensions",
+                "Shrugs"
             ]
 
 
@@ -21,34 +24,31 @@ export class ExerciseList extends Component {
     render() {
         const navigate = this.props.navigate
         return (
-            <View>
+            <View style={styles.scrollView}>
                 <View>
                     <Text style={styles.header}>List of Exercises</Text>
                 </View>
-                <View>
+                <ScrollView style={styles.scrollView}>
+                
                     {this.state.exercises.map((ex) => {
                         console.log(ex)
-                        return <ExerciseListItem exerciseName={ex} key={Date.now()} pressMe={() => navigate('Exercises', {
+                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Date.now()} pressMe={() => navigate('Exercises', {
                             exerciseName: ex
                         })} />
                     })}
-
-                </View>
-                {/* <View>
-                    <ExerciseListItem exerciseName={"Benchpress"} />
-                    <ExerciseListItem exerciseName={"Squat"} pressMe={() => navigate('Exercises', {
-                        exerciseName: "Squat baby!"
-                    })}/>
-
-                    <ExerciseListItem exerciseName={"Squat"} />
-                    <ExerciseListItem exerciseName={"Lateral extensions"} />
-                </View> */}
+                    {/* <View></View> */}
+                </ScrollView>
             </View>
+
         )
     }
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // marginBottom: '20'
+    },
     header: {
         fontSize: 30,
         fontWeight: 'bold',
@@ -56,7 +56,14 @@ const styles = StyleSheet.create({
         color: 'black',
         marginBottom: 20,
         marginTop: 20
-    }
+    },
+    scrollView: {
+        flex: 1,
+        width: '90%',
+        alignSelf: 'center',
+        
+    },
+    
 
 });
 

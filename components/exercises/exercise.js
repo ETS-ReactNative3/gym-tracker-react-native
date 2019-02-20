@@ -15,7 +15,6 @@ export default class ExercisePage extends Component {
             modalVisible: false,
         }
         this.addExtraReps = this.addExtraReps.bind(this)
-        this.repsContainerStyling = this.repsContainerStyling.bind(this)
         this.removeReps = this.removeReps.bind(this)
         this.saveReps = this.saveReps.bind(this)
         this.saveRepRow = this.saveRepRow.bind(this)
@@ -53,17 +52,7 @@ export default class ExercisePage extends Component {
         }
     }
 
-    repsContainerStyling = () => {
-        const containerHeightStyle = this.state.containerHeight
-        return {
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            paddingTop: 20,
-            paddingBottom: 20,
-            margin: 0,
-            height: containerHeightStyle,
-        }
-    }
+    
     saveRepRow(repRow, id) {
         repRow.date = Date.now()
         this.setState({
@@ -81,10 +70,14 @@ export default class ExercisePage extends Component {
         // LAUNCH TIMER COMPONENT
         this.setModalVisible()
     }
-
+       
+    
     render() {
         const { navigation } = this.props;
         const exerciseNameProp = navigation.getParam('exerciseName', 'No Name Provided');
+
+        
+
         return (
             <View>
                 <View style={styles.containerHeader}>
@@ -92,7 +85,7 @@ export default class ExercisePage extends Component {
                     {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
                     <View style={styles.imageBox} />
                 </View>
-                <View style={this.repsContainerStyling()}>
+                <View style={styles.repsContainerStyling()}>
                     {this.state.numberOfRepsComponents.map((id) => {
                         return <Reps id={id} key={id} style={styles.reps} removeReps={this.removeReps} addRepRow={(repRow) => this.saveRepRow(repRow, id)} />
                     })}
@@ -142,5 +135,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
 
     },
+    repsContainerStyling: () => {
+       
+        return {
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            paddingTop: 20,
+            paddingBottom: 20,
+            margin: 0,
+            height: 200,
+        }
+    }
+     
 
 });
