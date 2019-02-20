@@ -43,7 +43,7 @@ export default class RecordLine extends Component {
                 <Text style={styles.oneRepMaxText}>{this.state.oneRepMax}kg 1RM</Text>
 
                 <TouchableNativeFeedback onPress={this.props.removeReps}>
-                    <Image source={require('../../images/btn-del.png')} style={styles.removeButton} />
+                    <Image source={this.props.delImgUrl} style={styles.removeButton} />
                 </TouchableNativeFeedback>
 
             </View>
