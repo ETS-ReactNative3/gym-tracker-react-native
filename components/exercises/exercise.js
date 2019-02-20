@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, TextInput, Text, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import Reps from './reps'
 import Timer from '../timer/timer'
 
@@ -52,7 +52,7 @@ export default class ExercisePage extends Component {
         }
     }
 
-    
+
     saveRepRow(repRow, id) {
         repRow.date = Date.now()
         this.setState({
@@ -70,34 +70,36 @@ export default class ExercisePage extends Component {
         // LAUNCH TIMER COMPONENT
         this.setModalVisible()
     }
-       
-    
+
+
     render() {
         const { navigation } = this.props;
         const exerciseNameProp = navigation.getParam('exerciseName', 'No Name Provided');
 
-        
+
 
         return (
-            <View>
+            <ScrollView>
                 <View style={styles.containerHeader}>
                     <Text style={styles.header}>{exerciseNameProp}</Text>
                     {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
                     <View style={styles.imageBox} />
                 </View>
-                <View style={styles.repsContainerStyling()}>
+                <View style={styles.repsContainerStyling}>
                     {this.state.numberOfRepsComponents.map((id) => {
                         return <Reps id={id} key={id} style={styles.reps} removeReps={this.removeReps} addRepRow={(repRow) => this.saveRepRow(repRow, id)} />
                     })}
-                    <Button title="Save" onPress={this.saveReps} />
-                    <View style={styles.buttonRow}>
-                        <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
-                        <Button title="Timer" onPress={this.setModalVisible} />
-                        <Button title="Notes" />
-                    </View>
+
                 </View>
+                <View style={styles.buttonSave}><Button  title="Save" onPress={this.saveReps} /></View>
+                <View style={styles.buttonRow}>
+                    <Button style={styles.buttonAdd} title="Add reps" onPress={this.addExtraReps} />
+                    <Button title="Timer" onPress={this.setModalVisible} />
+                    <Button title="Notes" />
+                </View>
+
                 <Timer setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} />
-            </View>
+            </ScrollView>
 
         )
     }
@@ -114,7 +116,8 @@ const styles = StyleSheet.create({
         height: 200,
         width: 200,
         backgroundColor: 'black',
-        marginTop: 20
+        marginTop: 20,
+        alignSelf: 'center'
     },
     header: {
         fontSize: 20,
@@ -127,7 +130,10 @@ const styles = StyleSheet.create({
         padding: 0,
         flexWrap: 'nowrap',
     },
-
+    buttonSave: {
+        width: '90%',
+        alignSelf: 'center'
+    },
     buttonRow: {
         flexDirection: 'row',
         paddingTop: 10,
@@ -135,17 +141,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
 
     },
-    repsContainerStyling: () => {
-       
-        return {
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            paddingTop: 20,
-            paddingBottom: 20,
-            margin: 0,
-            height: 200,
-        }
+    repsContainerStyling: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        paddingTop: 20,
+        paddingBottom: 20,
+        padding: 20,
+        margin: 0,
+        height: 200,
+        alignSelf: 'center'
+
     }
-     
+
 
 });
