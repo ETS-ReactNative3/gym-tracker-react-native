@@ -175,17 +175,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
 
     },
-    // repsContainerStyling: {
-    //     flexDirection: 'column',
-    //     justifyContent: 'space-around',
-    //     paddingTop: 20,
-    //     paddingBottom: 20,
-    //     padding: 20,
-    //     margin: 0,
-    //     height: 200,
-    //     alignSelf: 'center'
-
-    // }
-
+    
 
 });

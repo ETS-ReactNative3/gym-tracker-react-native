@@ -6,7 +6,7 @@ const ExerciseListItem = ( props ) => {
     return (
         <TouchableNativeFeedback onPress={props.pressMe}>
             <View style={styles.container}>
-                <Text style={styles.items} >{props.exerciseName}</Text>
+                <Text style={styles.items}>{props.exerciseName}</Text>
             </View>
         </TouchableNativeFeedback>
     )
@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 2,
         marginTop: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        color:'black'
         
     },
     container: {
