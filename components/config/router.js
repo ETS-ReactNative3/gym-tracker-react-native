@@ -9,6 +9,7 @@ import Home from '../home'
 import ExercisePage from '../exercises/exercise';
 import ExerciseList from '../exercise-list/exercise-list'
 import CreateExerciseList from '../exercise-list/createListPage';
+import AddExerciseList from '../exercise-list/add-exercise-list'
 
 // export const Tabs = createMaterialTopTabNavigator(
 //     {
@@ -37,6 +38,7 @@ export const Route = createStackNavigator(
         Exercises: { screen: ExercisePage },
         CreateList: { screen: CreateExerciseList },
         ExerciseList: { screen: ExerciseList },
+        AddExerciseList: {screen: AddExerciseList }
     },
     {
         initialRouteName: 'Home'

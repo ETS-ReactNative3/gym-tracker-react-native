@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, ScrollView, Button } from 'react-native'
 import ExerciseListItem from './exerciseListItem'
 import { withNavigation } from 'react-navigation'
+import AddExerciseList from './add-exercise-list'
 
 export class ExerciseList extends Component {
     constructor(props) {
@@ -9,9 +10,9 @@ export class ExerciseList extends Component {
         this.state = {
             exercises: []
 
-        
+
         }
-        
+       
     }
 
     componentDidMount() {
@@ -22,28 +23,29 @@ export class ExerciseList extends Component {
         this.setState({
             title: title,
             exercises: exercises,
-            
+            modalVisible: false
+
         })
 
     }
+
     
 
     render() {
-       
-       
-
         return (
             <View style={styles.scrollView}>
+              
                 <View>
                     <Text style={styles.header}>{this.state.title}</Text>
                 </View>
+                <Button title={"Add exercise"} onPress={() => this.props.navigation.navigate('AddExerciseList')} />
                 <ScrollView style={styles.scrollView}>
 
                     {this.state.exercises.map((ex) => {
-                       
-                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Date.now()} pressMe={() => this.props.navigation.navigate('Exercises', {exerciseName: ex})} />
+
+                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} />
                     })}
-                   
+
                 </ScrollView>
             </View>
 

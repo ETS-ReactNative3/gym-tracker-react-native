@@ -10,7 +10,6 @@ export default class Home extends Component {
         return (
             <View style={styles.container}>
                 
-                {/* <ExerciseList navigate={this.props.navigation.navigate}/> */}
                 <CreateExerciseList navigate={this.props.navigation}/>
                
             </View>

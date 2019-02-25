@@ -25,18 +25,18 @@ export default class RecordLine extends Component {
         this.setState({
             oneRepMax: Math.floor(total)
         }, () => { this.props.addRepRow(this.state) })
-        
+
     }
 
     render() {
         return (
             <View style={styles.container}>
 
-                <Text>Reps:</Text><TextInput keyboardType='numeric' name="reps" onChangeText={(e) => {
+                <Text>Reps:</Text><TextInput style={styles.input} keyboardType='numeric' name="reps" onChangeText={(e) => {
                     this.setState({ reps: e }, () => { this.calculateOneRepMax() })
                 }} value={this.state.reps} />
 
-                <Text>Weight (kg)</Text><TextInput keyboardType='numeric' name="weight" onChangeText={(e) => {
+                <Text>Weight (kg)</Text><TextInput style={styles.input} keyboardType='numeric' name="weight" onChangeText={(e) => {
                     this.setState({ weight: e }, () => { this.calculateOneRepMax() })
 
                 }} value={this.state.weight} />
@@ -60,6 +60,9 @@ const styles = StyleSheet.create({
         marginBottom: 0,
         padding: 0,
 
+    },
+    input: {
+       
     },
     oneRepMaxText: {
         color: 'grey'

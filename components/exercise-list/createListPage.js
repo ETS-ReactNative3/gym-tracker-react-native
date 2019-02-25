@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Button, StyleSheet, TouchableNativeFeedback, ScrollView } from 'react-native'
 import ExerciseListItem from './exerciseListItem';
+import InputModal from './inputModal';
 
 export default class CreateExerciseList extends Component {
     constructor(props) {
@@ -28,30 +29,79 @@ export default class CreateExerciseList extends Component {
                         "Flying"
                     ]
                 }
-            ]
+            ],
+            modalVisible: false,
+            inputVal: ""
         }
+
+        this.openModal = this.openModal.bind(this)
+        this.addNewWorkout = this.addNewWorkout.bind(this)
+    }
+
+    openModal() {
+        this.setState({
+            modalVisible: true
+        })
+
+    }
+
+    addNewWorkout() {
+
+        if (this.state.inputVal) {
+            const newWorkoutName = this.state.inputVal
+            let newWorkoutObj = { "name": newWorkoutName, "exercises": [] }
+
+            this.setState({
+                workoutList: [...this.state.workoutList, newWorkoutObj],
+                inputVal: ""
+            })
+        }
+
     }
 
     render() {
-       
-
         return (
             <ScrollView>
+
+                <InputModal
+                    maxLength={10}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        this.setState(
+                            {
+                                modalVisible: !this.state.modalVisible
+                            }
+                        )
+                    }}
+                    styles={styles.modal}
+                    header={"Enter new workout name (max 10 characters):"}
+                    buttonText={"OK"}
+                    onChangeText={(e) => {
+                        this.setState({
+                            inputVal: e
+                        })
+                    }}
+                    inputValue={this.state.inputVal}
+                    closeModal={(inputVal) => this.setState(
+                        {
+                            modalVisible: !this.state.modalVisible,
+
+                        }, () => this.addNewWorkout())} />
                 <View>
                     <Text style={styles.header}>Create new list:</Text>
                 </View>
                 <View >
-                    <Button style={styles.buttonNew} title='Create new list +'></Button>
+                    <Button style={styles.buttonNew} onPress={this.openModal} title='Create new list +'></Button>
                 </View>
-                {/* {.map over array of existing days returning exercise list item with exercise name and link to the list} */}
+
                 <View style={styles.listContainer}>
                     {this.state.workoutList.map((workout) => {
+                        // find more random way to generate key
+                        return <TouchableNativeFeedback key={Math.random()} onPress={() => this.props.navigate.navigate('ExerciseList', {
 
-                        return <TouchableNativeFeedback key={Date.now()} onPress={() => this.props.navigate.navigate('ExerciseList', {
-                           
                             title: workout.name,
                             exercises: workout.exercises,
-                           
+
                         })}>
                             <View>
                                 <Text style={styles.listItem}>{workout.name}</Text>
@@ -97,7 +147,9 @@ const styles = StyleSheet.create({
         width: '90%',
         alignSelf: 'center'
     },
+    modal: {
 
+    }
 
 
 });
