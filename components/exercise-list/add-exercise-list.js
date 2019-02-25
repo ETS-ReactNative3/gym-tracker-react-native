@@ -20,21 +20,20 @@ export default class AddExerciseList extends Component {
         })
     }
 
-    toggleHighlightItem(id) {
-        const elId = id
-
-        if (!this.state.itemIdList.includes(id)) {
+    // toggle function adds/ removes exercise name to state
+    toggleHighlightItem(name) {
+        if (!this.state.itemIdList.includes(name)) {
 
             this.setState({
-                itemIdList: [...this.state.itemIdList, id]
+                itemIdList: [...this.state.itemIdList, name]
 
             })
 
-        } else if (this.state.itemIdList.includes(id)) {
+        } else {
 
             let removedElementArr = this.state.itemIdList.filter((el) => {
 
-                return el !== elId
+                return el !== name
 
             })
 
@@ -42,11 +41,14 @@ export default class AddExerciseList extends Component {
                 itemIdList: removedElementArr
 
             })
-        } else return
+        }
 
 
     }
 
+    componentWillUnmount() {
+        this.props.navigation.state.params.updateExercise(this.state.itemIdList);
+    }
 
     render() {
         const style = {
@@ -58,14 +60,16 @@ export default class AddExerciseList extends Component {
             }
         }
 
+
+
         return (
             <View>
                 <ScrollView>
                     <Text>Add an Exercise:</Text>
-                    <Button title={"Add"} />
+                    <Button title={"Add"} onPress={() => this.props.navigation.goBack()}/>
                     <View>
                         {this.state.exerciseList.map((exercise) => {
-                            return <ExerciseListItem id={exercise.id} key={Math.random()} exerciseName={exercise.name} onPress={() => this.toggleHighlightItem(exercise.id)} buttonSelected={this.state.itemIdList.includes(exercise.id) ? style.highlighted : style.unHighlighted}/>
+                            return <ExerciseListItem id={exercise.id} key={Math.random()} exerciseName={exercise.name} onPress={() => this.toggleHighlightItem(exercise.name)} buttonSelected={this.state.itemIdList.includes(exercise.name) ? style.highlighted : style.unHighlighted} />
                         })}
                     </View>
                 </ScrollView>

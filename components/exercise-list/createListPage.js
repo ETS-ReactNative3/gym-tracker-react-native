@@ -96,7 +96,7 @@ export default class CreateExerciseList extends Component {
 
                 <View style={styles.listContainer}>
                     {this.state.workoutList.map((workout) => {
-                        // find more random way to generate key
+                        
                         return <TouchableNativeFeedback key={Math.random()} onPress={() => this.props.navigate.navigate('ExerciseList', {
 
                             title: workout.name,

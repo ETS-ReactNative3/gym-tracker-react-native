@@ -9,10 +9,8 @@ export class ExerciseList extends Component {
         super(props)
         this.state = {
             exercises: []
-
-
         }
-       
+        this.updateExercise = this.updateExercise.bind(this)      
     }
 
     componentDidMount() {
@@ -24,21 +22,24 @@ export class ExerciseList extends Component {
             title: title,
             exercises: exercises,
             modalVisible: false
-
         })
-
+    }
+    updateExercise(newExercise) {
+        
+        this.setState({
+            exercises: [...this.state.exercises, ...newExercise]
+        })
     }
 
-    
-
     render() {
+       
         return (
             <View style={styles.scrollView}>
               
                 <View>
                     <Text style={styles.header}>{this.state.title}</Text>
                 </View>
-                <Button title={"Add exercise"} onPress={() => this.props.navigation.navigate('AddExerciseList')} />
+                <Button title={"Add exercise"} onPress={() => this.props.navigation.navigate('AddExerciseList', {updateExercise: this.updateExercise.bind(this)})} />
                 <ScrollView style={styles.scrollView}>
 
                     {this.state.exercises.map((ex) => {
