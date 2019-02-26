@@ -1,13 +1,15 @@
 import React from 'react'
 import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native'
+import {Button, Card, Title, Avatar, Icon} from 'react-native-paper'
 
-const ExerciseListItem = ( props ) => {
+const ExerciseListItem = (props) => {
 
     return (
         <TouchableNativeFeedback onPress={props.onPress}>
-            <View style={[styles.container, props.buttonSelected]}>
-                <Text style={styles.items}>{props.exerciseName}</Text>
-            </View>
+            <Card style={[styles.container, props.buttonSelected]}>
+                <Card.Title style={styles.items} title={props.exerciseName} left={(props) => <Avatar.Icon {...props} icon={'fitness-center'} />} />
+
+            </Card>
         </TouchableNativeFeedback>
     )
 
@@ -22,16 +24,14 @@ const styles = StyleSheet.create({
         padding: 20,
         fontSize: 20,
         textAlign: 'center',
-        color:'black',
-       
+        color: 'black',
+
 
     },
     container: {
-        marginBottom: 10,
-        borderStyle: 'solid',
-        borderColor: 'black',
-        borderWidth: 2,
-       
+        margin: 10,
+        
+
     }
 });
 

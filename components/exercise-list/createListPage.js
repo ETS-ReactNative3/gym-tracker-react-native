@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, Button, StyleSheet, TouchableNativeFeedback, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableNativeFeedback, ScrollView } from 'react-native'
+import {Button, Card, Title, Avatar, Icon} from 'react-native-paper'
 import ExerciseListItem from './exerciseListItem';
 import InputModal from './inputModal';
 
@@ -74,7 +75,7 @@ export default class CreateExerciseList extends Component {
                         )
                     }}
                     styles={styles.modal}
-                    header={"Enter new workout name (max 10 characters):"}
+                    header={"Enter new workout name:"}
                     buttonText={"OK"}
                     onChangeText={(e) => {
                         this.setState({
@@ -82,16 +83,16 @@ export default class CreateExerciseList extends Component {
                         })
                     }}
                     inputValue={this.state.inputVal}
-                    closeModal={(inputVal) => this.setState(
+                    closeModal={() => this.setState(
                         {
                             modalVisible: !this.state.modalVisible,
 
                         }, () => this.addNewWorkout())} />
                 <View>
-                    <Text style={styles.header}>Create new list:</Text>
+                    <Title style={styles.header}>Workouts:</Title>
                 </View>
                 <View >
-                    <Button style={styles.buttonNew} onPress={this.openModal} title='Create new list +'></Button>
+                    <Button icon="add" style={styles.button} mode="contained" onPress={this.openModal}>Add</Button>
                 </View>
 
                 <View style={styles.listContainer}>
@@ -103,9 +104,9 @@ export default class CreateExerciseList extends Component {
                             exercises: workout.exercises,
 
                         })}>
-                            <View>
-                                <Text style={styles.listItem}>{workout.name}</Text>
-                            </View>
+                            <Card style={styles.listItem}>
+                                <Card.Title  title={workout.name} left={(props) => <Avatar.Icon {...props} icon={'description'} />}/>
+                            </Card>
                         </TouchableNativeFeedback>
 
                     })}
@@ -124,24 +125,22 @@ const styles = StyleSheet.create({
         padding: 20
     },
     listItem: {
-        flex: 1,
-        alignSelf: 'center',
-        width: '100%',
-        padding: 20,
-        fontSize: 50,
-        borderStyle: 'solid',
-        borderColor: 'black',
-        borderWidth: 2,
-        marginTop: 10,
-        textAlign: 'center',
-        color: 'black'
+        margin: 5,
+        width: 300,
+        alignSelf: 'center'
 
     },
+    button: {
+       
+        alignSelf: 'center'
+    },
     header: {
-        fontSize: 20,
+        fontSize: 30,
         fontWeight: 'bold',
         alignSelf: 'center',
-        color: 'black'
+        color: 'black',
+        marginBottom: 20,
+        marginTop: 20
     },
     buttonNew: {
         width: '90%',

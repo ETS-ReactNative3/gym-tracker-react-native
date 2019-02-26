@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, ScrollView, Button } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
+import { Button, Card, Title, Avatar, Icon } from 'react-native-paper'
 import ExerciseListItem from './exerciseListItem'
 import { withNavigation } from 'react-navigation'
 import AddExerciseList from './add-exercise-list'
@@ -10,7 +11,7 @@ export class ExerciseList extends Component {
         this.state = {
             exercises: []
         }
-        this.updateExercise = this.updateExercise.bind(this)      
+        this.updateExercise = this.updateExercise.bind(this)
     }
 
     componentDidMount() {
@@ -25,30 +26,38 @@ export class ExerciseList extends Component {
         })
     }
     updateExercise(newExercise) {
-        
+
         this.setState({
             exercises: [...this.state.exercises, ...newExercise]
         })
     }
+    
+    deleteItem() {
 
+        const newArray = this.state.exercises.filter(exercise => exercise.id !== ex.id)
+
+        this.setState({
+            ExerciseList: newArray
+        })
+    }
     render() {
-       
+
         return (
-            <View style={styles.scrollView}>
-              
+            <ScrollView style={styles.scrollView}>
+
                 <View>
-                    <Text style={styles.header}>{this.state.title}</Text>
+                    <Title style={styles.header}>{this.state.title}</Title>
                 </View>
-                <Button title={"Add exercise"} onPress={() => this.props.navigation.navigate('AddExerciseList', {updateExercise: this.updateExercise.bind(this)})} />
-                <ScrollView style={styles.scrollView}>
+                <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', { updateExercise: this.updateExercise.bind(this) })}>Add exercise</Button>
 
-                    {this.state.exercises.map((ex) => {
 
-                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} />
-                    })}
+                {this.state.exercises.map((ex) => {
 
-                </ScrollView>
-            </View>
+                    return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} />
+                })}
+
+            </ScrollView>
+
 
         )
     }
@@ -57,7 +66,7 @@ export class ExerciseList extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // marginBottom: '20'
+        
     },
     header: {
         fontSize: 30,
