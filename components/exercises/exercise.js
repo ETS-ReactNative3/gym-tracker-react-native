@@ -21,9 +21,14 @@ export default class ExercisePage extends Component {
         this.saveReps = this.saveReps.bind(this)
         this.saveRepRow = this.saveRepRow.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
-        this.showDeleteIcon = this.showDeleteIcon.bind(this)
-        this.hideDeleteIcon = this.hideDeleteIcon.bind(this)
+        
     }
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+          title: navigation.getParam('exerciseName', 'Workout'),
+        };
+      };
 
     setModalVisible() {
         this.setState({ modalVisible: !this.state.modalVisible });
@@ -36,28 +41,19 @@ export default class ExercisePage extends Component {
                 height: this.state.height + 65
                 
             })
-            this.showDeleteIcon()
+            
         } else {
             console.log("Can't have more than 8 reps")
         }
         
     }
 
-    showDeleteIcon() {
-        this.setState({
-            deleteIcon: require('../../images/btn-del.png')
-        })
-    }
-    hideDeleteIcon() {
-        this.setState({
-            deleteIcon: null
-        })
-    }
+    
 
     // Removes the last rep component line if there are more than 3
     removeReps() {
         if (this.state.numberOfRepsComponents.length <= 3) {
-            this.hideDeleteIcon()
+            
             return console.log("There aren't any reps components to remove")
         } else {
             console.log("Removing reps")
@@ -66,10 +62,8 @@ export default class ExercisePage extends Component {
 
             this.setState({
                 numberOfRepsComponents: newState,
-                height: this.state.height - 30
-            }, () => { if(this.state.numberOfRepsComponents.length <= 3) {
-                this.hideDeleteIcon()
-            }})
+                height: this.state.height - 65
+            })
             
         }
     }
@@ -118,10 +112,13 @@ export default class ExercisePage extends Component {
                     {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
                     <View style={styles.imageBox} />
                 </View>
-                <Card elevation={1} style={repsContainerStyling}>
+                <Card elevation={2} style={repsContainerStyling}>
+                
                     {this.state.numberOfRepsComponents.map((id) => {
-                        return <Reps id={id} key={id} removeReps={this.removeReps} delImgUrl={this.state.deleteIcon} addRepRow={(repRow) => this.saveRepRow(repRow, id)} />
+                        return <Reps id={id} key={id} removeReps={this.removeReps} delImgUrl={this.state.deleteIcon} addRepRow={(repRow) => this.saveRepRow(repRow, id)} deleteIcon={this.state.numberOfRepsComponents.length <= 3 ? {display: 'none'} : {display: null} }/>
                     })}
+
+
 
                 </Card>
                 <View style={styles.buttonSave}>
@@ -154,6 +151,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         alignSelf: 'center'
     },
+    
     header: {
         fontSize: 30,
         fontWeight: 'bold',

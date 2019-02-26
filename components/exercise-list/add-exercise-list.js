@@ -21,6 +21,13 @@ export default class AddExerciseList extends Component {
         this.filterList = this.filterList.bind(this)
     }
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+          title: 'Add new exercises',
+        };
+      };
+
+
     componentDidMount() {
         this.setState({
             exerciseList: exercises,
@@ -121,38 +128,57 @@ export default class AddExerciseList extends Component {
                 padding: 20,
                 borderRadius: 10
             },
+            outerModalContainer: {
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#00000080'
+            },
+            innerModalContainer: {
+                width: 300,
+                height: 200,
+                backgroundColor: '#fff',
+                padding: 20
+            }
 
         }
-
-
-
-        
-
-
 
         return (
             <View>
                 <Modal
-                    style={style.modalContainer}
+                    transparent={true}
                     autoFocus={true}
                     visible={this.state.modalVisible}
                     onRequestClose={this.toggleModal}
                     onDismiss={this.toggleModal}>
-                    <TextInput label={"Enter exercise name: "} mode={'outlined'} maxLength={10} onChangeText={(e) => this.setState({ inputValue: e })} value={this.state.inputValue}></TextInput>
-                    <Text>{this.state.inputValue}</Text>
-                    <Button style={style.button} mode="contained" onPress={() => {
-                        if (this.state.inputValue) {
-                            const newExName = { id: this.state.exerciseList.length + 1, name: this.state.inputValue }
-                            this.setState(
-                                {
-                                    modalVisible: !this.state.modalVisible,
-                                    exerciseList: [...this.state.exerciseList, newExName]
-                                }
-                            )
-                        } else this.toggleModal()
+
+                    <View style={style.outerModalContainer}>
+                        <View style={style.innerModalContainer}>
+                            <TextInput label={"Enter exercise name: "} mode={'outlined'} maxLength={10} onChangeText={(e) => this.setState({ inputValue: e })} value={this.state.inputValue}></TextInput>
+
+                            <Button style={style.button} mode="contained" onPress={() => {
+                                if (this.state.inputValue) {
+                                    const newExName = { id: this.state.exerciseList.length + 1, name: this.state.inputValue }
+                                    const oldstate = this.state.exerciseList
+                                    oldstate.unshift(newExName)
+
+                                    console.log("potential solution", oldstate)
+                                    console.log("before updating state", this.state.exerciseList)
+
+                                    this.setState(
+                                        {
+                                            modalVisible: !this.state.modalVisible,
+                                            exerciseList: oldstate,
+                                            inputValue: ''
+                                        }, () => console.log("After updating state", this.state.exerciseList)
+                                    )
+                                } else this.toggleModal()
 
 
-                    }}>Add</Button>
+                            }}>Add</Button>
+                        </View>
+                    </View>
                 </Modal>
 
                 <ScrollView>

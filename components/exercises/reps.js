@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
-import { Card, Title, Avatar, Icon, TextInput, Text, } from 'react-native-paper'
+import { Card, Title, Avatar, Icon, TextInput, Text, IconButton, } from 'react-native-paper'
 
 export default class RecordLine extends Component {
     constructor(props) {
@@ -46,12 +46,10 @@ export default class RecordLine extends Component {
     
                     }} value={this.state.weight} />
     
-    
+                    <IconButton icon="delete" color={'red'} onPress={this.props.removeReps} style={this.props.deleteIcon}/>
                     {/* <Text style={styles.oneRepMaxText}>{this.state.oneRepMax}kg 1RM</Text> */}
     
-                    {/* <TouchableNativeFeedback onPress={this.props.removeReps}>
-                        <Image source={this.props.delImgUrl} style={styles.removeButton} />
-                    </TouchableNativeFeedback> */}
+                    
                 </View>
 
 

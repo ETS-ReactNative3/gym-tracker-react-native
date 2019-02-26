@@ -39,6 +39,11 @@ export default class CreateExerciseList extends Component {
         this.addNewWorkout = this.addNewWorkout.bind(this)
     }
 
+    static navigationOptions = {
+        title: 'All Workouts',
+        
+      }
+
     openModal() {
         this.setState({
             modalVisible: true
