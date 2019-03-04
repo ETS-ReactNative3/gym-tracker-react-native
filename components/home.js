@@ -7,6 +7,23 @@ import CreateExerciseList from './exercise-list/createListPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 
 export default class Home extends Component {
+    constructor(props){
+        super(props)
+
+        this.state = {
+            currentUserId: ''
+        }
+    }
+
+    componentDidMount() {
+        const { navigation } = this.props;
+        const currentUserId = navigation.getParam('currentUserId', undefined);
+
+        this.setState({
+            currentUserId: currentUserId
+        })
+    }
+
     render() {
         return (
             <PaperProvider>

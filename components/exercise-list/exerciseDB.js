@@ -17,21 +17,5 @@ export const exerciseList = [
 
 ]
 
-// { "Squat"},
-//             ,
-//             ,
-//             ,
-//            ,
-//            ,
-//             "ChairChest",
-//             ,
-//             ,
-//             ,
-//             "PressDeltoid",
-//             "FlyEversionExternal",
-//             "RotationForearm",
-//             "CurlFront",
-//             "Deltoid"
-
 export default exerciseList
 

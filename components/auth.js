@@ -52,11 +52,14 @@ export default class Auth extends React.Component {
     });
   }
 
+
   _onPressLogin() {
     this.state.client.auth.loginWithCredential(new AnonymousCredential()).then(user => {
         console.log(`Successfully logged in as user ${user.id}`);
         this.setState({ currentUserId: user.id })
-        this.props.navigation.navigate('Home')
+        this.props.navigation.navigate('Home', {
+            currentUserId: user.id
+        })
     }).catch(err => {
         console.log(`Failed to log in anonymously: ${err}`);
         this.setState({ currentUserId: undefined })
