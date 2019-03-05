@@ -3,9 +3,11 @@ import { Text, View, StyleSheet, ScrollView } from 'react-native'
 import { Button, Card, Title, Avatar, Icon } from 'react-native-paper'
 import ExerciseListItem from './exerciseListItem'
 import { withNavigation } from 'react-navigation'
-import AddExerciseList from './add-exercise-list'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import { addExercise } from '../../actions/exercise-actions'
 
-export class ExerciseList extends Component {
+class ExerciseList extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -13,7 +15,7 @@ export class ExerciseList extends Component {
             itemIdList: [],
             title: "temp title"
         }
-        this.updateExercise = this.updateExercise.bind(this)
+       
         this.deleteItem = this.deleteItem.bind(this)
         this.toggleHighlightItem = this.toggleHighlightItem.bind(this)
     }
@@ -40,13 +42,7 @@ export class ExerciseList extends Component {
     
     
 
-    updateExercise(newExercise) {
-
-        this.setState({
-            exercises: [...this.state.exercises, ...newExercise]
-        })
-    }
-
+    
     deleteItem(name) {
 
         // const newArray = this.state.exercises.filter(exercise => {
@@ -103,12 +99,12 @@ export class ExerciseList extends Component {
                 <View>
                     <Title style={styles.header}>{this.state.title}</Title>
                 </View>
-                <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', { updateExercise: this.updateExercise.bind(this) })}>Add exercise</Button>
+                <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList')}>Add exercise</Button>
 
 
-                {this.state.exercises.map((ex) => {
+                {this.props.exercises.map((ex) => {
 
-                    return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} onLongPress={() => this.toggleHighlightItem(ex)} buttonSelected={this.state.itemIdList.includes(ex) ? style.highlighted : style.unHighlighted}/>
+                    return <ExerciseListItem style={styles.listItem} exerciseName={ex.name} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex.name })} /> //onLongPress={() => this.toggleHighlightItem(ex)} buttonSelected={this.state.itemIdList.includes(ex) ? style.highlighted : style.unHighlighted} />
                 })}
 
             </ScrollView>
@@ -141,5 +137,15 @@ const styles = StyleSheet.create({
 
 });
 
+const mapStateToProps = (state) => {
+    const { exercises } = state
+    return { exercises }
+  };
 
-export default withNavigation(ExerciseList)
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+      addExercise,
+    }, dispatch)
+);
+  
+export default connect(mapStateToProps, mapDispatchToProps)(ExerciseList);

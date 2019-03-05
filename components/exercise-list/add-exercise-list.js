@@ -3,9 +3,12 @@ import { View, ScrollView, Modal, Text } from 'react-native'
 import { Button, Title, TextInput, Searchbar } from 'react-native-paper'
 import exercises from './exerciseDB'
 import ExerciseListItem from './exerciseListItem';
-import InputModal from './inputModal';
+import InputModal from './inputModal'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { addExercise } from '../../actions/exercise-actions'
 
-export default class AddExerciseList extends Component {
+class AddExerciseList extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -30,8 +33,8 @@ export default class AddExerciseList extends Component {
 
     componentDidMount() {
         this.setState({
-            exerciseList: exercises,
-            filteredArray: exercises
+            exerciseList: this.props.exercises,
+            filteredArray: this.props.exercises
         })
     }
 
@@ -62,7 +65,9 @@ export default class AddExerciseList extends Component {
     }
 
     componentWillUnmount() {
-        this.props.navigation.state.params.updateExercise(this.state.itemIdList);
+        console.log("Component will unmount", this.state.itemIdList)
+        this.props.addExercise(this.state.itemIdList)
+        console.log("Action creator called")
     }
 
     toggleModal() {
@@ -159,19 +164,18 @@ export default class AddExerciseList extends Component {
 
                             <Button style={style.button} mode="contained" onPress={() => {
                                 if (this.state.inputValue) {
-                                    const newExName = { id: this.state.exerciseList.length + 1, name: this.state.inputValue }
+                                    const newExObj = { id: this.state.exerciseList.length + 1, name: this.state.inputValue }
                                     const oldstate = this.state.exerciseList
-                                    oldstate.unshift(newExName)
+                                    oldstate.unshift(newExObj)
 
-                                    console.log("potential solution", oldstate)
-                                    console.log("before updating state", this.state.exerciseList)
+                            
 
                                     this.setState(
                                         {
                                             modalVisible: !this.state.modalVisible,
                                             exerciseList: oldstate,
                                             inputValue: ''
-                                        }, () => console.log("After updating state", this.state.exerciseList)
+                                        }
                                     )
                                 } else this.toggleModal()
 
@@ -200,3 +204,21 @@ export default class AddExerciseList extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+    console.log(state)
+    const { exercises } = state
+    return { exercises }
+    
+  };
+
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch,
+        ...bindActionCreators({addExercise}, dispatch)
+    }
+}
+
+
+  
+export default connect(mapStateToProps, mapDispatchToProps)(AddExerciseList);

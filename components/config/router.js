@@ -22,7 +22,7 @@ export const Route = createStackNavigator(
         AddExerciseList: {screen: AddExerciseList }
     },
     {
-        initialRouteName: 'Auth'
+        initialRouteName: 'Home'
     }
 
 );
