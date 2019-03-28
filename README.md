@@ -2,7 +2,8 @@
 
 ### TLDR Description
 Native android app to record workouts in the gym. 
-Full stack CRUD web, and react native endpoints. 
+Part of a larger web app project.
+Hooked into a Node-Mongo server.
 
 ### Description
 This is part of a MERN web app eco-system hosted on AWS. 
