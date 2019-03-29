@@ -21,6 +21,7 @@ The initial inspiration for this project was to open up my gym data so I can mon
 + Node server (in another repo here: INSERT LINK)
 + Google  OAuth2
 + React native paper
++ React-Native-Local-MongoDB
 
 ### List of lessons learned can be found here: <LINK>
 
