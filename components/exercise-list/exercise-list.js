@@ -1,45 +1,139 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
+import { Button, Card, Title, Avatar, Icon } from 'react-native-paper'
 import ExerciseListItem from './exerciseListItem'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import { addExercise } from '../../actions/exercise-actions'
 
 
-export class ExerciseList extends Component {
+class ExerciseList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            exercises: [
-                { name: "Benchpress" },
-                { name: "Squat" },
-                { name: "Lateral extensions"}
-            ]
+            exercises: [],
+            itemIdList: [],
+            title: "temp title"
         }
+       
+        
+        this.toggleHighlightItem = this.toggleHighlightItem.bind(this)
+    }
+
+      static navigationOptions = ({ navigation }) => {
+        return {
+          title: navigation.getParam('title', 'Workout'),
+        };
+      };
+
+    componentDidMount() {
+        const { navigation } = this.props;
+        const title = navigation.getParam('title', 'no title available');
+        const exercises = navigation.getParam('exercises', 'no exercises found')
+        
+        this.setState({
+            title: title,
+            exercises: exercises,
+            modalVisible: false
+        })
+    }
+    
+    
+
+    
+   
+
+    toggleHighlightItem(name) {
+        if (!this.state.itemIdList.includes(name)) {
+
+            this.setState({
+                itemIdList: [...this.state.itemIdList, name]
+
+            })
+        // show delete button in navbar
+        } else {
+            // if itemIdList is empty - remove navbar button
+
+            let removedElementArr = this.state.itemIdList.filter((el) => {
+
+                return el !== name
+
+            })
+
+            this.setState({
+                itemIdList: removedElementArr
+
+            })
+        }
+
+
     }
 
 
     render() {
-        return (
-            <View>
-                <View>
-                    <Text style={styles.header}>List of Exercises</Text>
-                </View>
-                <View>
-                    {/* {this.state.exercises.map((ex) => {
-                        console.log(ex)
-                        return <ExerciseListItem exerciseName={ex.name} key={Date.now()} />
-                    })} */}
+        const { navigation } = this.props;
+        const workoutId = navigation.getParam('id', 'no id found')
+     
 
-                </View>
-                <View>
-                    <ExerciseListItem exerciseName={"Benchpress"} />
-                    <ExerciseListItem exerciseName={"Squat"} />
-                    <ExerciseListItem exerciseName={"Lateral extensions"} />
-                </View>
-            </View>
-        )
+        const style = {
+            highlighted: {
+                backgroundColor: 'red'
+            },
+            unHighlighted: {
+                backgroundColor: 'white'
+            }
+        }
+        
+        if(this.props.workouts[workoutId].exercises){
+            return (
+                <ScrollView style={styles.scrollView}>
+    
+                    <View>
+                        <Title style={styles.header}>{this.state.title}</Title>
+                    </View>
+                    <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', {
+                        id: workoutId
+                    })}>Add exercise</Button>
+    
+    
+                    {
+                        this.props.workouts[workoutId].exercises.map((ex) => {
+    
+                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} /> //onLongPress={() => this.toggleHighlightItem(ex)} buttonSelected={this.state.itemIdList.includes(ex) ? style.highlighted : style.unHighlighted} />
+                    })}
+    
+                </ScrollView>
+    
+    
+            )
+        } else {
+            return (
+                <ScrollView style={styles.scrollView}>
+    
+                    <View>
+                        <Title style={styles.header}>{this.state.title}</Title>
+                    </View>
+                    <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList')}>Add exercise</Button>
+    
+    
+                   
+                    
+    
+                </ScrollView>
+    
+    
+            )
+        }
+
+        
     }
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+
+    },
     header: {
         fontSize: 30,
         fontWeight: 'bold',
@@ -47,9 +141,29 @@ const styles = StyleSheet.create({
         color: 'black',
         marginBottom: 20,
         marginTop: 20
-    }
+    },
+    scrollView: {
+        flex: 1,
+        width: '90%',
+        alignSelf: 'center',
+
+    },
+
 
 });
 
+const mapStateToProps = (state) => {
 
-export default ExerciseList
+    const { exercises } = state.exerciseReducer
+    const { workouts } = state.workoutReducer
+  
+    return { exercises, workouts }
+  };
+
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+      addExercise,
+    }, dispatch)
+);
+  
+export default connect(mapStateToProps, mapDispatchToProps)(ExerciseList);

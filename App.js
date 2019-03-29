@@ -1,29 +1,18 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import Record from './components/exercises/reps';
-import ExercisePage from './components/exercises/exercise'
-import ExerciseList from './components/exercise-list/exercise-list'
+import { Provider as PaperProvider } from 'react-native-paper';
+import AppContainer, { Tabs } from './components/config/router'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import rootReducer from './reducers/index'
 
+const store = createStore(rootReducer)
 
-// type Props = {};
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        {/* <ExercisePage /> */}
-       <ExerciseList />
-      </View>
+      <Provider store={store}>
+        <AppContainer />
+      </Provider >
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: '#F5FCFF',
-  }
-});
-

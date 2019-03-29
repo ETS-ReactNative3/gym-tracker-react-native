@@ -44,8 +44,8 @@ export default class TimerModal extends Component {
         return (
             <View style={{ marginTop: 22 }}>
                 <Modal
-                    onShow={() => {this.interval = setInterval(() => this.countdown(), 1000)}}
-                    onDismiss={() =>  clearInterval(this.interval)}
+                    onShow={() => { this.interval = setInterval(() => this.countdown(), 1000) }}
+                    onDismiss={() => clearInterval(this.interval)}
                     animationType="slide"
                     transparent={false}
                     visible={this.props.modalVisible}
@@ -58,31 +58,38 @@ export default class TimerModal extends Component {
                             <Text style={styles.number}>{this.state.length}</Text>
                             <Text style={styles.seconds}>seconds remaining</Text>
 
-                            <TextInput style={styles.inputLength} keyboardType='numeric' name="timerLength" onChangeText={(e) => {
-                                clearInterval(this.interval)
-                                this.setState({
-                                    length: e,
-                                    defaultLength: e
-                                })
-                            }} />
-
-                            <Button onPress={this.props.setModalVisible} title='Start' style={styles.button} onPress={() => {
-                                clearInterval(this.interval)
-                                this.interval = setInterval(() => this.countdown(), 1000)
+                            <View style={styles.inputLength}>
+                                <TextInput keyboardType='numeric' name="timerLength" onChangeText={(e) => {
+                                    clearInterval(this.interval)
+                                    this.setState({
+                                        length: e,
+                                        defaultLength: e
+                                    })
                                 }} />
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                <Button onPress={this.props.setModalVisible} title='Start' onPress={() => {
+                                    clearInterval(this.interval)
+                                    this.interval = setInterval(() => this.countdown(), 1000)
+                                }} />
+                            </View>
 
-                            <Button title='Stop' style={styles.button} onPress={() => {
-                                
-                                clearInterval(this.interval)
-                            }} />
+                            <View style={styles.buttonContainer}>
+                                <Button title='Stop' onPress={() => {
+    
+                                    clearInterval(this.interval)
+                                }} />
+                            </View>
 
-                            <Button onPress={() => {
-                                this.setState({
-                                    length: this.state.defaultLength
-                                })
-                                clearInterval(this.interval)
-                                this.props.setModalVisible()
-                            }} title='Close' style={[styles.cancel, styles.button]} />
+                            <View style={styles.cancel}>
+                                <Button onPress={() => {
+                                    this.setState({
+                                        length: this.state.defaultLength
+                                    })
+                                    clearInterval(this.interval)
+                                    this.props.setModalVisible()
+                                }} title='Close' />
+                            </View>
 
 
                         </View>
@@ -101,12 +108,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         alignSelf: 'center'
     },
-    button: {
+    buttonContainer: {
         width: '75%',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        margin: 10,
+
+    },
+    button: {
+        // width: '75%',
+        alignSelf: 'center',
+        marginBottom: 10,
+        
     },
     cancel: {
-        backgroundColor: 'red'
+        width: '75%',
+        alignSelf: 'center',
+        margin: 10,
     },
     seconds: {
         fontSize: 20,
@@ -120,7 +137,10 @@ const styles = StyleSheet.create({
         color: 'red'
     },
     inputLength: {
-        width: '10%',
-        alignSelf: 'center'
+        // width: '10%',
+        alignSelf: 'center',
+        borderColor: 'black',
+        borderBottomWidth: 1,
+        // padding: '10'
     }
 })
