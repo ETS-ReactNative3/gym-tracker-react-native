@@ -22,7 +22,9 @@ The initial inspiration for this project was to open up my gym data so I can mon
 + Google  OAuth2
 + React native paper
 
-## List of lessons learned can be found here: <LINK>
+### List of lessons learned can be found here: <LINK>
+
+### What I would do differently:
 
 ### Use a working version:
 + Download the React Native for android app here: <INSERT LINK>
