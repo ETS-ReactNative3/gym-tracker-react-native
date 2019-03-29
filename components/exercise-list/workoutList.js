@@ -1,42 +1,26 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableNativeFeedback, ScrollView } from 'react-native'
 import {Button, Card, Title, Avatar, Icon} from 'react-native-paper'
-import ExerciseListItem from './exerciseListItem';
-import InputModal from './inputModal';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import InputModal from './inputModal'
+import {addWorkout}  from '../../actions/workout-actions'
 
-export default class CreateExerciseList extends Component {
+class WorkoutList extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            workoutList: [
-                {
-                    "name": "Leg Day",
-                    "exercises": [
-                        "Benchpress",
-                        "Squat",
-                        "Lateral extensions",
-                        "Bicep curls",
-                        "Tricep extensions",
-                        "Shrugs"
-                    ]
-                },
-                {
-                    "name": "Arm Day",
-                    "exercises": [
-                        "Jumping Jacks",
-                        "Hack squats",
-                        "Tricep curls",
-                        "Flying"
-                    ]
-                }
-            ],
             modalVisible: false,
             inputVal: ""
         }
 
         this.openModal = this.openModal.bind(this)
         this.addNewWorkout = this.addNewWorkout.bind(this)
+    }
+
+    componentDidMount() {
+       
     }
 
     static navigationOptions = {
@@ -55,10 +39,13 @@ export default class CreateExerciseList extends Component {
 
         if (this.state.inputVal) {
             const newWorkoutName = this.state.inputVal
-            let newWorkoutObj = { "name": newWorkoutName, "exercises": [] }
+           
+            let newWorkoutObj = { id: this.props.workouts.length, "name": newWorkoutName, "exercises": [] }
+            console.log('new workout name: ', newWorkoutObj)
+            this.props.addWorkout(newWorkoutObj)
 
             this.setState({
-                workoutList: [...this.state.workoutList, newWorkoutObj],
+                // workoutList: [...this.state.workoutList, newWorkoutObj],
                 inputVal: ""
             })
         }
@@ -101,10 +88,10 @@ export default class CreateExerciseList extends Component {
                 </View>
 
                 <View style={styles.listContainer}>
-                    {this.state.workoutList.map((workout) => {
+                    {this.props.workouts.map((workout) => {
                         
                         return <TouchableNativeFeedback key={Math.random()} onPress={() => this.props.navigate.navigate('ExerciseList', {
-
+                            id: workout.id,
                             title: workout.name,
                             exercises: workout.exercises,
 
@@ -157,3 +144,17 @@ const styles = StyleSheet.create({
 
 
 });
+
+const mapStateToProps = (state) => {
+  
+    const { workouts } = state.workoutReducer
+    return { workouts }
+  };
+
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+      addWorkout,
+    }, dispatch)
+);
+  
+export default connect(mapStateToProps, mapDispatchToProps)(WorkoutList);

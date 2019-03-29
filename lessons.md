@@ -13,3 +13,5 @@ It is far easier for me to manage the daily workout object when it can be access
 Workout --> List of exercises --> Exercises
 
 Using redux allows the use of different workouts (list of ex's) to access the same record object which will result in the days 'workout record', avoiding the need to pass the state up the component hierachy in a convoluted way. This would have been especially messy whilst using react-navigation.
+
+* Styling - CSS

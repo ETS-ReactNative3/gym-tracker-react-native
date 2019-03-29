@@ -3,7 +3,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import AppContainer, { Tabs } from './components/config/router'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import rootReducer from './reducers/exercise-reducer'
+import rootReducer from './reducers/index'
 
 const store = createStore(rootReducer)
 

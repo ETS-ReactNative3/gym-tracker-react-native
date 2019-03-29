@@ -7,6 +7,7 @@ import InputModal from './inputModal'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { addExercise } from '../../actions/exercise-actions'
+import { addExerciseToWorkout } from '../../actions/workout-actions'
 
 class AddExerciseList extends Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class AddExerciseList extends Component {
             modalVisible: false,
             inputValue: '',
             searchText: '',
-            filteredArray: []
+            filteredArray: [],
+            passToRedux: []
         }
         this.toggleHighlightItem = this.toggleHighlightItem.bind(this)
         this.toggleModal = this.toggleModal.bind(this)
@@ -41,9 +43,11 @@ class AddExerciseList extends Component {
     // toggle function adds/ removes exercise name to state
     toggleHighlightItem(name) {
         if (!this.state.itemIdList.includes(name)) {
+            const newItem = {id: this.props.exercises.length + 1, name: name}
 
             this.setState({
-                itemIdList: [...this.state.itemIdList, name]
+                itemIdList: [...this.state.itemIdList, name],
+                passToRedux: [...this.state.passToRedux, newItem]
 
             })
 
@@ -65,8 +69,13 @@ class AddExerciseList extends Component {
     }
 
     componentWillUnmount() {
-        console.log("Component will unmount", this.state.itemIdList)
-        this.props.addExercise(this.state.itemIdList)
+        const { navigation } = this.props;
+        const workoutId = navigation.getParam('id', 'no id found')
+
+        const updateExInWorkout = {workoutId: workoutId, exercises: this.state.passToRedux}
+    
+        this.props.addExercise(this.state.passToRedux)
+        this.props.addExerciseToWorkout(updateExInWorkout)
         console.log("Action creator called")
     }
 
@@ -206,8 +215,8 @@ class AddExerciseList extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log(state)
-    const { exercises } = state
+    console.log("Add exercise list", state)
+    const { exercises } = state.exerciseReducer
     return { exercises }
     
   };
@@ -215,7 +224,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         dispatch,
-        ...bindActionCreators({addExercise}, dispatch)
+        ...bindActionCreators({addExercise, addExerciseToWorkout}, dispatch)
     }
 }
 

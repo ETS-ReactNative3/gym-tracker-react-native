@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux'
 
-const INITIAL_STATE =
-  [
+const INITIAL_STATE = {
+  exercises: [
+
     { id: 1, name: "Benchpress" },
     { id: 2, name: "Lateral extensions" },
     { id: 3, name: "Bicep curls" },
@@ -12,26 +12,29 @@ const INITIAL_STATE =
     { id: 8, name: "FlyChest" },
     { id: 9, name: "PressCrunchesDecline" },
     { id: 10, name: "Chest" },
-    { id: 11, name: "Benchpress" },
-    { id: 12, name: "Benchpress" },
-    { id: 13, name: "Benchpress" },
-    { id: 14, name: "Benchpress" }
+
   ]
+}
 
+export const exerciseReducer = (state = INITIAL_STATE, action) => {
 
-const exerciseReducer = (state = INITIAL_STATE, action) => {
-  console.log("reducer add_exercise ABOUT TO BE called", state, action)
   switch (action.type) {
     case 'ADD_EXERCISE':
-      console.log("reducer add_exercise called")
-      return [...INITIAL_STATE, action.payload]
+      
+      return {exercises: [...state.exercises, ...action.payload]}
+    // //  ! UNTESTED !
+    // case 'DELETE_EXERCICSE':
+    //   const deletedItem = action.payload
+    //   const newState = state.filter((item) => item != deletedItem)
+    //   return [state, newState]
+    // case 'EDIT_EXERCISE':
+    //   const updatedItem = action.payload
+    //   const newState = state.filter((item) => item != updatedItem)
+    //   newState.push(updatedItem)
+    //     return [...state, newState]
     default:
       return state
   }
-};
+}
 
-const exApp = combineReducers({
-  exercises: exerciseReducer,
-});
-
-export default exApp
+export default exerciseReducer

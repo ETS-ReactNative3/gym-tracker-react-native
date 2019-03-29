@@ -4,3 +4,10 @@ export const addExercise = (newExerciseArr) => (
       payload: newExerciseArr,
     }
   ) 
+
+  export const addExerciseRecord = (newExerciseRec) => (
+    {
+      type: 'ADD_EXERCISE_RECORD',
+      payload: newExerciseRec,
+    }
+  ) 

@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, Button, TouchableNativeFeedback } fro
 import Record from './exercises/reps';
 import ExerciseList from './exercise-list/exercise-list'
 import ExerciseListItem from './exercise-list/exerciseListItem'
-import CreateExerciseList from './exercise-list/createListPage';
+import CreateExerciseList from './exercise-list/workoutList';
 import { Provider as PaperProvider } from 'react-native-paper';
 
 export default class Home extends Component {
