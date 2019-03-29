@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, TextInput, Text, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
-import { Card, Title, Avatar, Icon, Button  } from 'react-native-paper'
+import { View, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
+import { Card, Title, Button  } from 'react-native-paper'
 import Reps from './reps'
 import Timer from '../timer/timer'
 
@@ -21,15 +21,18 @@ export default class ExercisePage extends Component {
         this.saveReps = this.saveReps.bind(this)
         this.saveRepRow = this.saveRepRow.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
-        this._saveToLocalStorage = this._saveToLocalStorage.bind(this)
+        this.saveToLocalStorage = this.saveToLocalStorage.bind(this)
 
-        this._retrieveData = this._retrieveData.bind(this)
+        this.retrieveData = this.retrieveData.bind(this)
         
     }
 
     componentDidMount(){
         const { navigation } = this.props;
         const exerciseName = navigation.getParam('exerciseName', 'No Name Provided');
+        this.setState({
+            exerciseName: exerciseName
+        })
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -88,11 +91,11 @@ export default class ExercisePage extends Component {
     }
 
     // Persist all ex record data to local storage.
-    _saveToLocalStorage = async () => {
-        
+    saveToLocalStorage = async () => {
+        const name = this.state.exerciseName
  
              try {
-               await AsyncStorage.setItem('exerciselog', JSON.stringify(this.state.repRecord))
+               await AsyncStorage.setItem(JSON.stringify(this.state.exerciseName), JSON.stringify(this.state.repRecord))
                
              } catch (error) {
                console.log("error saving data: ". error)
@@ -101,25 +104,25 @@ export default class ExercisePage extends Component {
      }
 
     // Retrieving data from local storage.
-     _retrieveData = async () => {
+    retrieveData = async () => {
         
         try {
-          const value = await AsyncStorage.getItem('exerciselog');
+          const value = await AsyncStorage.getItem(JSON.stringify(this.state.exerciseName));
           if (value !== null) {
             // We have data!!
-            console.log("Local storage: ", value);
+            console.log(`Local storage for ${this.state.exerciseName} :`, JSON.parse(value));
           }
         } catch (error) {
           // Error retrieving data
           console.log("Error: ", error)
         }
-      };
+    };
 
     // Need to make sure each rep record line is unique (using id) overwriting the old value.
     saveReps() {
         this.setState({
             repRecord: [...this.state.repRecord, this.state.repRecordTemp]
-        },  () => this._saveToLocalStorage().then(() => this._retrieveData() ))
+        },  () => this.saveToLocalStorage().then(() => this.retrieveData() ))
         
         
         // Launch timer component

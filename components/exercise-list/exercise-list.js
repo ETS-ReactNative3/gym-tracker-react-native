@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, ScrollView } from 'react-native'
-import { Button, Card, Title, Avatar, Icon } from 'react-native-paper'
+import { View, StyleSheet, ScrollView, AsyncStorage } from 'react-native'
+import { Button, Title, } from 'react-native-paper'
 import ExerciseListItem from './exerciseListItem'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { addExercise } from '../../actions/exercise-actions'
+
+
 
 
 class ExerciseList extends Component {
@@ -18,6 +20,7 @@ class ExerciseList extends Component {
        
         
         this.toggleHighlightItem = this.toggleHighlightItem.bind(this)
+        this.saveToMongo = this.saveToMongo.bind(this)
     }
 
       static navigationOptions = ({ navigation }) => {
@@ -69,6 +72,21 @@ class ExerciseList extends Component {
 
     }
 
+    // Takes the record of workouts held in local storage and sends them to MongoDB.
+    saveToMongo() {
+        
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+              stores.map((result, i, store) => {
+                // get at each store's key/value so you can work with it
+                let key = store[i][0];
+                let value = store[i][1];
+              });
+            });
+          });
+        
+    }
+
 
     render() {
         const { navigation } = this.props;
@@ -94,6 +112,7 @@ class ExerciseList extends Component {
                     <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', {
                         id: workoutId
                     })}>Add exercise</Button>
+                    <Button icon="add" mode="contained" onPress={() => this.saveToMongo() }>Save Workout</Button>
     
     
                     {
