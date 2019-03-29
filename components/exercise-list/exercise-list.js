@@ -99,7 +99,7 @@ class ExerciseList extends Component {
                     {
                         this.props.workouts[workoutId].exercises.map((ex) => {
     
-                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} /> //onLongPress={() => this.toggleHighlightItem(ex)} buttonSelected={this.state.itemIdList.includes(ex) ? style.highlighted : style.unHighlighted} />
+                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} /> 
                     })}
     
                 </ScrollView>

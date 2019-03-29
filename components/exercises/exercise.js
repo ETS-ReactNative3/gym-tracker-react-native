@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, TextInput, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, TextInput, Text, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
 import { Card, Title, Avatar, Icon, Button  } from 'react-native-paper'
 import Reps from './reps'
 import Timer from '../timer/timer'
@@ -21,7 +21,15 @@ export default class ExercisePage extends Component {
         this.saveReps = this.saveReps.bind(this)
         this.saveRepRow = this.saveRepRow.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
+        this._saveToLocalStorage = this._saveToLocalStorage.bind(this)
+
+        this._retrieveData = this._retrieveData.bind(this)
         
+    }
+
+    componentDidMount(){
+        const { navigation } = this.props;
+        const exerciseName = navigation.getParam('exerciseName', 'No Name Provided');
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -48,7 +56,6 @@ export default class ExercisePage extends Component {
         
     }
 
-    
 
     // Removes the last rep component line if there are more than 3
     removeReps() {
@@ -68,22 +75,54 @@ export default class ExercisePage extends Component {
         }
     }
 
+     
 
+    // Tracks the number of rep row instances in order to safely add and delete them as components. 
     saveRepRow(repRow, id) {
         repRow.date = Date.now()
         this.setState({
             repRecordTemp: { [id]: repRow }
         })
+
+    
     }
+
+    // Persist all ex record data to local storage.
+    _saveToLocalStorage = async () => {
+        
+ 
+             try {
+               await AsyncStorage.setItem('exerciselog', JSON.stringify(this.state.repRecord))
+               
+             } catch (error) {
+               console.log("error saving data: ". error)
+             }
+           
+     }
+
+    // Retrieving data from local storage.
+     _retrieveData = async () => {
+        
+        try {
+          const value = await AsyncStorage.getItem('exerciselog');
+          if (value !== null) {
+            // We have data!!
+            console.log("Local storage: ", value);
+          }
+        } catch (error) {
+          // Error retrieving data
+          console.log("Error: ", error)
+        }
+      };
 
     // Need to make sure each rep record line is unique (using id) overwriting the old value.
     saveReps() {
         this.setState({
             repRecord: [...this.state.repRecord, this.state.repRecordTemp]
-        })
-        console.log(this.state.repRecord)
+        },  () => this._saveToLocalStorage().then(() => this._retrieveData() ))
         
-        // LAUNCH TIMER COMPONENT
+        
+        // Launch timer component
         this.setModalVisible()
     }
 
@@ -93,8 +132,7 @@ export default class ExercisePage extends Component {
         const { navigation } = this.props;
         const exerciseNameProp = navigation.getParam('exerciseName', 'No Name Provided');
        
-        const repsContainerStyling = {
-            // flexDirection: 'column',
+        const repsContainerStyling = {            
             justifyContent: 'space-around',
             alignItems: 'center',
             padding: 5,
