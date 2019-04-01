@@ -7,8 +7,6 @@ import { bindActionCreators } from 'redux';
 import { addExercise } from '../../actions/exercise-actions'
 
 
-
-
 class ExerciseList extends Component {
     constructor(props) {
         super(props)
@@ -39,7 +37,13 @@ class ExerciseList extends Component {
             exercises: exercises,
             modalVisible: false
         })
+
+        
+       
+        
+
     }
+    
     
     
 
@@ -74,16 +78,8 @@ class ExerciseList extends Component {
 
     // Takes the record of workouts held in local storage and sends them to MongoDB.
     saveToMongo() {
+        // AsyncStorage
         
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-              stores.map((result, i, store) => {
-                // get at each store's key/value so you can work with it
-                let key = store[i][0];
-                let value = store[i][1];
-              });
-            });
-          });
         
     }
 
