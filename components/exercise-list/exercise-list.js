@@ -94,11 +94,15 @@ class ExerciseList extends Component {
         // await AsyncStorage.getAllKeys().then(res => console.log(res)).catch(err => console.log("error: ", err))
         await AsyncStorage.getItem('workout').then(res => {
             console.log("Final workout: ", JSON.parse(res))
-            return finalVal = res
+            return finalVal = JSON.parse(res)
         })
             .catch(err => console.log("error: ", err))
         console.log('finalval: ', finalVal)
         // !!!!!! ------> Send workout to mongodb here
+
+        const postBody = JSON.stringify({
+            "workout": finalVal
+        })
 
         await fetch('http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/', {
             method: 'POST', 
@@ -106,10 +110,11 @@ class ExerciseList extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
               },
-            body: `{"workout": "Test2"}`, 
+            body: postBody, 
             
-          }).then(res => res.json())
-          .then(response => console.log('Success:', JSON.stringify(response)))
+          })
+        //   .then(res => res.json())
+          .then(response => console.log('Success:', response))
           .catch(error => console.log('Error in fetch:', error));
         
         
