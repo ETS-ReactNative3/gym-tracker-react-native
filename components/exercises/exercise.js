@@ -183,7 +183,7 @@ export default class ExercisePage extends Component {
                 <View style={styles.buttonRow}>
                     <Button mode="contained" style={styles.buttonAdd} onPress={this.addExtraReps} >Add reps</Button>
                     <Button mode="contained" onPress={this.setModalVisible}>Timer</Button>
-                    <Button mode="contained" >Notes</Button>
+                    <Button mode="contained" disabled={true}>Notes</Button>
                 </View>
 
                 <Timer setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} />

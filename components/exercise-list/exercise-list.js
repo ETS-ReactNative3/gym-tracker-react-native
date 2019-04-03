@@ -79,6 +79,7 @@ class ExerciseList extends Component {
     // Takes the record of workouts held in local storage and sends them to MongoDB.
     async saveToMongo() {
 
+        let finalVal
 
         // Check local storage for all values in workout list.
         // Create 1 workout object from all workouts stored in local storage
@@ -90,12 +91,28 @@ class ExerciseList extends Component {
 
             
         })
-        await AsyncStorage.getAllKeys().then(res => console.log(res)).catch(err => console.log("error: ", err))
-        await AsyncStorage.getItem('workout').then(res => console.log("Final workout: ", JSON.parse(res))).catch(err => console.log("error: ", err))
+        // await AsyncStorage.getAllKeys().then(res => console.log(res)).catch(err => console.log("error: ", err))
+        await AsyncStorage.getItem('workout').then(res => {
+            console.log("Final workout: ", JSON.parse(res))
+            return finalVal = res
+        })
+            .catch(err => console.log("error: ", err))
+        console.log('finalval: ', finalVal)
         // !!!!!! ------> Send workout to mongodb here
 
-
-
+        await fetch('http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/', {
+            method: 'POST', 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+            body: `{"workout": "Test2"}`, 
+            
+          }).then(res => res.json())
+          .then(response => console.log('Success:', JSON.stringify(response)))
+          .catch(error => console.log('Error in fetch:', error));
+        
+        
 
     }
 
@@ -124,7 +141,7 @@ class ExerciseList extends Component {
                     <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', {
                         id: workoutId
                     })}>Add exercise</Button>
-                    <Button icon="add" mode="contained" onPress={() => this.saveToMongo()}>Save Workout</Button>
+                    <Button mode="contained" onPress={() => this.saveToMongo()}>Finish and save workout</Button>
 
 
                     {

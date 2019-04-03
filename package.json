@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.2.2",
+    "mongodb": "^3.2.2",
     "mongodb-stitch-react-native-sdk": "^4.3.0",
     "prop-types": "^15.6.2",
     "react": "16.6.3",
