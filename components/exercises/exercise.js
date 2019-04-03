@@ -12,6 +12,8 @@ export default class ExercisePage extends Component {
             numberOfRepsComponents: [1, 2, 3],
             height: 250,
             repRecord: [],
+            repRecordTemp: {},
+            repRow: {},
             modalVisible: false,
             deleteIcon: null
         }
@@ -20,9 +22,8 @@ export default class ExercisePage extends Component {
         this.saveReps = this.saveReps.bind(this)
         this.saveRepRow = this.saveRepRow.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
-        this.saveToLocalStorage = this.saveToLocalStorage.bind(this)
-
-        this.retrieveData = this.retrieveData.bind(this)
+        
+        
         
     }
 
@@ -53,7 +54,7 @@ export default class ExercisePage extends Component {
             })
             
         } else {
-            console.log("Can't have more than 8 reps")
+            alert("You can't have more than 8 sets")
         }
         
     }
@@ -83,61 +84,60 @@ export default class ExercisePage extends Component {
     saveRepRow(repRow, id) {
         repRow.date = Date.now()
         this.setState({
-            repRecordTemp: { [id]: repRow }
+            repRecordTemp: { [id]: repRow },
+            repRow: repRow
         })
 
     
     }
 
     // Persist all ex record data to Async storage:
-    // Checks if workout log exists, if not it creates it, if it does, it overwrites the old value after concatonating the old and new value.
-    saveToLocalStorage(key) {
-    
-        //    console log
-        console.log("key is: ", key)
-        AsyncStorage.getItem(key).then(doc => console.log(`value of ${key} in Async storage: (before if block) `, doc))
+    saveReps() {
 
+        const key = this.state.exerciseName
+        
+        // check if async contains exercise log obj
         AsyncStorage.getAllKeys().then(res => {
             if (res.includes(key)) {
-                
+                // if yes - append new rep record to end of workout obj
                 AsyncStorage.getItem(key).then(doc => {
-                   
-                    const newDoc = doc + JSON.stringify(this.state.repRecord)
-                    // console log
-                    console.log("new doc to override workout :", newDoc)
-                    
-                    AsyncStorage.setItem(key, newDoc).catch(err=>console.log("Error: ", err))
-                    // Console log
-                    AsyncStorage.getItem(key).then(doc => console.log("Value of workout in Async storage: (inside if) ", doc))
 
-                }).catch(err=>console.log("Error: ", err))
+                    const prevWoObj = JSON.parse(doc)
+                    
+                    // Dynamically increasing key number - used as set ID                   
+                    const idVal = Object.keys(prevWoObj[key]).length
+                    
+                    // adding new set to the exercise log object
+                    prevWoObj[key][idVal] = this.state.repRow
+                    
+                    // saving exercise log object to local storage
+                    AsyncStorage.setItem(key, JSON.stringify(prevWoObj), err => console.log("error in final set item: ", err))
+                        
+                        .catch(err => console.log("Error: ", err))
+                    
+                })
+                    .catch(err => console.log("Error: ", err))
+
+
             } else {
-                AsyncStorage.setItem(key, JSON.stringify(this.state.repRecord)).catch(err=>console.log("Error: ", err))
-                // console.log
-                AsyncStorage.getItem(key).then(doc => console.log("Value of workout in Async storage: (inside else) ", doc))
+                //  if no - create new obj and save reprow to it
+                const woObj = {
+                    [key]: {
+                        0: this.state.repRow
+                    }
+                }
+                AsyncStorage.setItem(key, JSON.stringify(woObj))
+                    .catch(err => console.log("Error: ", err))
+               
+                
             }
-            // console.log
-            AsyncStorage.getItem(key).then(doc => console.log("Value of workout in Async storage: (after if/else) ", doc))
         })
         .catch(err=>console.log("Error: ", err))
-
-       
-
-    }
-
-    
-     
-
-    // Retrieving data from local storage.
-    retrieveData(key) {
-        AsyncStorage.getItem(JSON.stringify(key))
-    };
-
-    // Need to make sure each rep record line is unique (using id) overwriting the old value.
-    saveReps() {
+         
         this.setState({
-            repRecord: [...this.state.repRecord, this.state.repRecordTemp]
-        },  () => this.saveToLocalStorage(this.state.exerciseName))
+            repRecord: [...this.state.repRecord, this.state.repRecordTemp],
+            
+        })
         
         
         // Launch timer component
