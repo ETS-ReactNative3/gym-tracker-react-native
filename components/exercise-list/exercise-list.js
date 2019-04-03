@@ -77,47 +77,51 @@ class ExerciseList extends Component {
     }
 
     // Takes the record of workouts held in local storage and sends them to MongoDB.
-    async saveToMongo() {
+    saveToMongo() {
 
         let finalVal
-
-        // Check local storage for all values in workout list.
-        // Create 1 workout object from all workouts stored in local storage
-        // Remove all values in workout list from local storage
+        // Get all values for keys in local storage in the current exercise list.
         AsyncStorage.multiGet(this.state.exercises, (err, store) => {
-            console.log("Store: ", store)
-            AsyncStorage.setItem('workout', JSON.stringify(store)).catch(err => console.log("error: ", err))
-            AsyncStorage.multiRemove(this.state.exercises).catch(err => console.log("error: ", err))
-
-            
+        //    Map over the return values array and return just the values.
+            const workoutex = store.map(exercise => {
+                if (exercise[1]) {
+                    return JSON.parse(exercise[1])
+                } else return
+            })
+// put the exercise logs array in an object with a date key
+            finalVal = {
+                [Date.now()]: workoutex
+            }
+           
         })
-        // await AsyncStorage.getAllKeys().then(res => console.log(res)).catch(err => console.log("error: ", err))
-        await AsyncStorage.getItem('workout').then(res => {
-            console.log("Final workout: ", JSON.parse(res))
-            return finalVal = JSON.parse(res)
-        })
-            .catch(err => console.log("error: ", err))
-        console.log('finalval: ', finalVal)
-        // !!!!!! ------> Send workout to mongodb here
+        // Make a POST request to MONGO with the workout log
+            .then(() => {
 
-        const postBody = JSON.stringify({
-            "workout": finalVal
-        })
+                // FETCH POST -->
+                const postBody = JSON.stringify({
+                    "workout": finalVal
+                })
+               
+                fetch('http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: postBody,
 
-        await fetch('http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/', {
-            method: 'POST', 
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-            body: postBody, 
-            
-          })
-        //   .then(res => res.json())
-          .then(response => console.log('Success:', response))
-          .catch(error => console.log('Error in fetch:', error));
-        
-        
+                })
+                    
+                    .then(response => console.log('Success:', response))
+                    .catch(error => console.log('Error in fetch:', error));
+
+            })
+            // Remove all the exercise logs in this workout from local storage. 
+            .then(() => {
+                AsyncStorage.multiRemove(this.state.exercises, (error) => console.log("error: ", error))
+                .catch(err => console.log("error: ", err))
+            })
+            .catch(error => console.log('Error:', error));
 
     }
 
