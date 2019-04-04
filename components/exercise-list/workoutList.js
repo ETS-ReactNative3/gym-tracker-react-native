@@ -27,6 +27,7 @@ class WorkoutList extends Component {
         this.openModal = this.openModal.bind(this);
         this.addNewWorkout = this.addNewWorkout.bind(this);
         this.updateLocalStorage = this.updateLocalStorage.bind(this)
+        this.updateMongo = this.updateMongo.bind(this)
     }
 
     // Checking if workout array is saved to local storage.
@@ -110,13 +111,27 @@ class WorkoutList extends Component {
 
     updateLocalStorage(name, newObj) {
         AsyncStorage.setItem(name, JSON.stringify(newObj))
-            .then(() => {
-                AsyncStorage.getItem(name)
-                    .then(doc => console.log("UPDATE LOCAL STORAGE :", JSON.parse(doc)))
-                    .catch(err => console.log(err))
-            })
             .catch(err => console.log(err))
          
+    }
+
+    updateMongo(body) {
+        // take local storage object and PUT to mongo
+        const recordID = body._id
+        
+        const postBody = JSON.stringify(body)
+        
+
+        fetch(`http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout-list/${recordID}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: postBody,
+
+        })
+        .catch(error => console.log('Error in fetch:', error));
     }
 
     addNewWorkout() {
@@ -132,14 +147,17 @@ class WorkoutList extends Component {
             AsyncStorage.getItem(workoutKey)
             .then(doc => {
                 const res = JSON.parse(doc)
-                console.log("value of local storage: ", JSON.parse(doc))
+               
                 res.workouts.push(newWorkoutObj)
+                console.log("value of updated value sent to local storage: ", res)
                 this.updateLocalStorage(workoutKey, res)
+                this.updateMongo(res)
             })
             .catch(err => console.log(err))
             
             // send to redux
             this.props.addWorkout(newWorkoutObj)
+            
 
             this.setState({
                 inputVal: ""
