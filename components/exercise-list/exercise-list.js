@@ -90,6 +90,7 @@ class ExerciseList extends Component {
             })
 // put the exercise logs array in an object with a date key
             finalVal = {
+                "userID": "01",
                 [Date.now()]: workoutex
             }
            

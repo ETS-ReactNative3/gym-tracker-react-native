@@ -1,3 +1,10 @@
+export const addInitialWorkout = (initialWorkout) => (
+  {
+    type: 'ADD_INITIAL_WORKOUT',
+    payload: initialWorkout,
+  }
+) 
+
 export const addWorkout = (newWorkout) => (
     {
       type: 'ADD_WORKOUT',

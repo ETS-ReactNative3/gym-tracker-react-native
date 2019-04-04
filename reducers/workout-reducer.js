@@ -1,51 +1,57 @@
 
 
 
-const INITIAL_STATE = {
-    workouts:
+// const INITIAL_STATE = {
+//     userId: 0,
+//     workouts:
 
-        [
-            {
-                "id": 0,
-                "name": "Leg Day",
-                "exercises": [
-                    "Benchpress",
-                    "Squat",
-                    "Lateral extensions",
-                    "Bicep curls",
-                    "Tricep extensions",
-                    "Shrugs"
-                ]
-            },
-            {
-                "id": 1,
-                "name": "Arm Day",
-                "exercises": [
-                    "Jumping Jacks",
-                    "Hack squats",
-                    "Tricep curls",
-                    "Flying"
-                ]
-            },
-            {
-                "id": 2,
-                "name": "Bum Day",
-                "exercises": [
-                    "Jumping Jacks",
-                    "Hack squats",
-                    "Tricep curls",
-                    "Flying"
-                ]
-            }
-        ]
+//         [
+//             {
+//                 "id": 0,
+//                 "name": "Leg Day",
+//                 "exercises": [
+//                     "Benchpress",
+//                     "Squat",
+//                     "Lateral extensions",
+//                     "Bicep curls",
+//                     "Tricep extensions",
+//                     "Shrugs"
+//                 ]
+//             },
+//             {
+//                 "id": 1,
+//                 "name": "Arm Day",
+//                 "exercises": [
+//                     "Jumping Jacks",
+//                     "Hack squats",
+//                     "Tricep curls",
+//                     "Flying"
+//                 ]
+//             },
+//             {
+//                 "id": 2,
+//                 "name": "Bum Day",
+//                 "exercises": [
+//                     "Jumping Jacks",
+//                     "Hack squats",
+//                     "Tricep curls",
+//                     "Flying"
+//                 ]
+//             }
+//         ]
+// }
+const INITIAL_STATE = {
+    workouts: []
 }
 
 export const workoutReducer = (state = INITIAL_STATE, action) => {
    
-const perState = state
 
     switch (action.type) {
+        case 'ADD_INITIAL_WORKOUT':
+            return action.payload
         case 'ADD_WORKOUT':
+        // add userid to obj
             return { workouts: [...state.workouts, action.payload] }
         case 'ADD_EXERCISE_TO_WORKOUT':
             const { workoutId, exercises } = action.payload
