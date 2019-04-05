@@ -16,7 +16,10 @@ Using redux allows the use of different workouts (list of ex's) to access the sa
 
 * Styling - CSS
 
-* Keeping track of the component hierachy
+* Keeping track of the component hierach
+
+* Start constructing data from smallest unit - do server first
+
 
 
 

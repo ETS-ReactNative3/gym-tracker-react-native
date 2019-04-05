@@ -1,8 +1,7 @@
 
 
-
 // const INITIAL_STATE = {
-//     userId: 0,
+//     userid: 0,
 //     workouts:
 
 //         [
@@ -54,18 +53,20 @@ export const workoutReducer = (state = INITIAL_STATE, action) => {
         // add userid to obj
             return { workouts: [...state.workouts, action.payload] }
         case 'ADD_EXERCISE_TO_WORKOUT':
+        // There is no check for repeat exercises as some people may want to perform the same exercise more than once/ as a superset.
             const { workoutId, exercises } = action.payload
+            // Extracts the workout object - to update the exercises inside it.
             const newState = state.workouts.filter((workout) => {
-                
-                return workout.id == workoutId
-            })            
-            const ex = exercises.map(i => i.name)
-            newState[0].exercises = [...newState[0].exercises, ...ex]
-            const finalState = state.workouts.filter((workout) => {
+                return workout.id === workoutId
+            })   
+            newState[0].exercises = [...newState[0].exercises, ...exercises]
+            
+            // create a new array of workouts without the current workout object
+            const workouts = state.workouts.filter(workout => {
                 return workout.id !== workoutId
             })
-            finalState.push(newState[0]) 
-            return {workouts: finalState}
+            // create new state from old workouts appending the new workout object which has been updated with a new exercise.
+            return {userid: state.userId, workouts: [...workouts, ...newState]}
         // //  ! UNTESTED !
         // case 'DELETE_WORKOUT':
         //     const deletedItem = action.payload
