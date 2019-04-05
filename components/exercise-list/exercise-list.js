@@ -37,18 +37,7 @@ class ExerciseList extends Component {
             exercises: exercises,
             modalVisible: false
         })
-
-
-
-
-
     }
-
-
-
-
-
-
 
     toggleHighlightItem(name) {
         if (!this.state.itemIdList.includes(name)) {
@@ -88,7 +77,7 @@ class ExerciseList extends Component {
                     return JSON.parse(exercise[1])
                 } else return
             })
-// put the exercise logs array in an object with a date key
+        // put the exercise logs array in an object with a date key
             finalVal = {
                 "userID": "01",
                 [Date.now()]: workoutex
@@ -172,6 +161,7 @@ class ExerciseList extends Component {
                         <Title style={styles.header}>{this.state.title}</Title>
                     </View>
                     <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList')}>Add exercise</Button>
+                    <Text>Please add exercises to this workout.</Text>
 
 
 
