@@ -37,6 +37,9 @@ class ExerciseList extends Component {
         newWorkoutId: this.state.workoutId
     }
     this.props.deleteExerciseFromWorkout(payload)
+    this.setState({
+        exercisesToRemove: []
+    })
   }
   
   componentDidMount() {
@@ -170,10 +173,14 @@ class ExerciseList extends Component {
             return workoutObject.exercises.map(ex => {
               return (
                 <ExerciseListItem
+                buttonSelected={
+                    this.state.exercisesToRemove.includes(ex._id)
+                        ? style.highlighted
+                        : style.unHighlighted
+                }
                   style={styles.listItem}
-
-                
-                  icon={this.state.exercisesToRemove.includes(ex.id) ? 'delete' : 'fitness-center'}
+                  icon={this.state.exercisesToRemove.includes(ex._id) ? 'delete' : 'fitness-center'}
+                  size={40}
                   exerciseName={ex.exerciseName}
                   key={Math.random()}
                   onPress={() =>
@@ -186,7 +193,7 @@ class ExerciseList extends Component {
                     if(!this.state.exercisesToRemove.includes(ex._id)){
                         this.setState({
                             exercisesToRemove: [...this.state.exercisesToRemove, ex._id]
-                        })
+                        }, () => console.log("Ex to delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
                     } else {
                         const removeExFromArr = this.state.exercisesToRemove.filter(exerciseId => {
                         
@@ -195,7 +202,7 @@ class ExerciseList extends Component {
                        
                         this.setState({
                             exercisesToRemove: removeExFromArr
-                        })
+                        }, () => console.log("Ex to NO LONGER delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
                     }
                     
                   }}

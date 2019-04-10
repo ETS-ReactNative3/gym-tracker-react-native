@@ -273,6 +273,8 @@ class AddExerciseList extends Component {
 
                             return (
                                 <ExerciseListItem
+                                    icon={this.state.itemIdList.includes(exercise.id) ? 'check-circle' : 'fitness-center'}
+                                    size={40}
                                     id={exercise.id}
                                     key={Math.random()}
                                     exerciseName={exercise.exerciseName}
