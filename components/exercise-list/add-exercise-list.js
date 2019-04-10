@@ -61,8 +61,8 @@ class AddExerciseList extends Component {
     // toggle function adds/ removes exercise name to state
     toggleHighlightItem(exId) {
         if (!this.state.itemIdList.includes(exId)) {
+            
             // Search for exercise id in exerciselist - return object
-
             const newItem = this.state.exerciseList.find(exObj => {
                 if (exObj.id === exId) {
                     return exObj
@@ -74,12 +74,15 @@ class AddExerciseList extends Component {
                 passToRedux: [...this.state.passToRedux, newItem]
             });
         } else {
-            let removedElementArr = this.state.itemIdList.filter(el => {
+            const removedElementArr = this.state.itemIdList.filter(el => {
                 return el !== exId;
             });
-
+            const removedPassToReduxArr = this.state.passToRedux.filter(el => {
+                return el.id !== exId;
+            });
             this.setState({
-                itemIdList: removedElementArr
+                itemIdList: removedElementArr,
+                passToRedux: removedPassToReduxArr
             });
         }
     }
@@ -95,7 +98,7 @@ class AddExerciseList extends Component {
             workoutId: workoutId,
             exercises: this.state.passToRedux
         };
-      console.log("add-ex-list == updateExInWorkout: ", updateExInWorkout)
+      
         this.props.addExercise(this.state.passToRedux);
         this.props.addExerciseToWorkout(updateExInWorkout);
 
