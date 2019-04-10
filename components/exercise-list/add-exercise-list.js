@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { addExercise } from '../../actions/exercise-actions'
 import { addExerciseToWorkout } from '../../actions/workout-actions'
+const workoutKey = "workoutList";
 
 class AddExerciseList extends Component {
     constructor(props) {
@@ -86,9 +87,7 @@ class AddExerciseList extends Component {
             });
         }
     }
-
     
-
     componentWillUnmount() {
         //   pass array of exercises to add to workout redux action
         const { navigation } = this.props;

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addExercise } from "../../actions/exercise-actions";
 
+
 class ExerciseList extends Component {
   constructor(props) {
     super(props);
@@ -37,6 +38,16 @@ class ExerciseList extends Component {
     });
   }
 
+//   Every time state is updated, updateworkout in parent workoutlist is called - which will save the new workouts object to local storage and update Mongo
+  componentDidUpdate() {
+    const { navigation } = this.props;
+    const updateWorkout = navigation.getParam("updateWorkout");
+
+    updateWorkout(null, this.props.workouts);
+    console.log("Workouts Object in exList passed to workoutList: ", this.props.workouts)
+    
+  }
+
   toggleHighlightItem(name) {
     if (!this.state.itemIdList.includes(name)) {
       this.setState({
@@ -60,12 +71,10 @@ class ExerciseList extends Component {
   saveToMongo(workoutId) {
     let finalVal;
     // Get all values for keys in local storage in the current exercise list.
-    console.log("this.props.workouts", this.props.workouts);
-    // console.log("this.props.workouts[workoutId].exercises ==> ", this.props.workouts[workoutId])
+
     AsyncStorage.multiGet([], (err, store) => {
       //    Map over the return values array and return just the values.
 
-      console.log("SAVETOMONGO get all keys returned ==> ", store);
       const workoutex = store.map(exercise => {
         if (exercise[1]) {
           return JSON.parse(exercise[1]);

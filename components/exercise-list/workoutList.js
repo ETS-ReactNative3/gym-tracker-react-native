@@ -28,6 +28,8 @@ class WorkoutList extends Component {
         this.addNewWorkout = this.addNewWorkout.bind(this);
         this.updateLocalStorage = this.updateLocalStorage.bind(this)
         this.updateMongo = this.updateMongo.bind(this)
+        this.updateWorkout = this.updateWorkout.bind(this)
+        this.updateLocalStorage = this.updateLocalStorage.bind(this)
     }
 
     // Checking if workout array is saved to local storage.
@@ -53,7 +55,7 @@ class WorkoutList extends Component {
 
             if (store.includes(workoutKey)) {
                 // if yes - send to action creator - update redux state
-
+// AsyncStorage.removeItem(workoutKey)
                 AsyncStorage.getItem(workoutKey)
                     .then(doc => {
                         
@@ -83,6 +85,7 @@ class WorkoutList extends Component {
                     })
                     .then(res => {
                         // send to action creator - update redux state & save to local storage
+                        
                         this.props.addInitialWorkout(res[0]);
                         AsyncStorage.setItem(workoutKey, JSON.stringify(res[0]))
                             .catch(
@@ -109,10 +112,33 @@ class WorkoutList extends Component {
         });
     }
 
+    // save new redux emitted workout object to local storage - called from child - ex list
     updateLocalStorage(name, newObj) {
-        AsyncStorage.setItem(name, JSON.stringify(newObj))
+        console.log("updateLocalStorage FIRED")
+        AsyncStorage.getItem(workoutKey)
+        .then(doc => {
+            const tempWorkout = JSON.parse(doc)
+            console.log("newObj: ", newObj)
+            console.log("tempWorkout: ", tempWorkout)
+
+            tempWorkout.workouts = newObj
+
+            console.log("Object to pass to local storage: tempWorkout ", tempWorkout)
+            AsyncStorage.setItem(name, JSON.stringify(tempWorkout))
+            .then(()=> {
+                AsyncStorage.getItem(workoutKey).then(doc => console.log("UPDATED LOCAL STORAGE: ", JSON.parse(doc)))
+            })
             .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
          
+    }
+    
+    updateWorkout(key, newObj){
+        console.log("updateWorkout FIRED")
+        this.updateLocalStorage(workoutKey, newObj)
+
+        //  PUT to mongo
     }
 
     updateMongo(body) {
@@ -166,6 +192,8 @@ class WorkoutList extends Component {
     }
 
     render() {
+        
+        
         return (
             <ScrollView>
                 <InputModal
@@ -217,7 +245,8 @@ class WorkoutList extends Component {
                                     this.props.navigate.navigate("ExerciseList", {
                                         id: workout.id,
                                         title: workout.name,
-                                        exercises: workout.exercises
+                                        exercises: workout.exercises,
+                                        updateWorkout: (key, data) => this.updateWorkout(key, data)
                                     })
                                 }
                             >
@@ -270,8 +299,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-    const { workouts } = state.workoutReducer;
-    return { workouts };
+    const workouts = state.workoutReducer;
+   
+    return workouts;
 };
 
 const mapDispatchToProps = dispatch =>

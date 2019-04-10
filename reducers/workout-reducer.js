@@ -41,6 +41,7 @@
 //         ]
 // }
 const INITIAL_STATE = {
+    userid: 1,
     workouts: []
 }
 
@@ -51,8 +52,7 @@ export const workoutReducer = (state = INITIAL_STATE, action) => {
         case 'ADD_INITIAL_WORKOUT':
             return action.payload
         case 'ADD_WORKOUT':
-        // add userid to obj
-            return { workouts: [...state.workouts, action.payload] }
+            return { userid: state.userId, workouts: [...state.workouts, action.payload] }
         case 'ADD_EXERCISE_TO_WORKOUT':
         // There is no check for repeat exercises as some people may want to perform the same exercise more than once/ as a superset.
             const { workoutId, exercises } = action.payload
