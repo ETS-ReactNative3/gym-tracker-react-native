@@ -29,7 +29,7 @@ class WorkoutList extends Component {
         this.updateLocalStorage = this.updateLocalStorage.bind(this)
         this.updateMongo = this.updateMongo.bind(this)
         this.updateWorkout = this.updateWorkout.bind(this)
-        this.updateLocalStorage = this.updateLocalStorage.bind(this)
+        
     }
 
     // Checking if workout array is saved to local storage.
@@ -113,31 +113,29 @@ class WorkoutList extends Component {
     }
 
     // save new redux emitted workout object to local storage - called from child - ex list
-    updateLocalStorage(name, newObj) {
-        console.log("updateLocalStorage FIRED")
+    async updateLocalStorage(name, newObj) {
+        
         AsyncStorage.getItem(workoutKey)
         .then(doc => {
             const tempWorkout = JSON.parse(doc)
-            console.log("newObj: ", newObj)
-            console.log("tempWorkout: ", tempWorkout)
-
             tempWorkout.workouts = newObj
-
-            console.log("Object to pass to local storage: tempWorkout ", tempWorkout)
             AsyncStorage.setItem(name, JSON.stringify(tempWorkout))
-            .then(()=> {
-                AsyncStorage.getItem(workoutKey).then(doc => console.log("UPDATED LOCAL STORAGE: ", JSON.parse(doc)))
-            })
             .catch(err => console.log(err))
         })
         .catch(err => console.log(err))
-         
+        
     }
     
     updateWorkout(key, newObj){
-        console.log("updateWorkout FIRED")
+       
         this.updateLocalStorage(workoutKey, newObj)
-
+        .then(() => {
+            AsyncStorage.getItem(workoutKey)
+            .then(doc => {
+                this.updateMongo(JSON.parse(doc))
+            })
+            
+        })
         //  PUT to mongo
     }
 
@@ -157,6 +155,7 @@ class WorkoutList extends Component {
             body: postBody,
 
         })
+        
         .catch(error => console.log('Error in fetch:', error));
     }
 
@@ -175,7 +174,7 @@ class WorkoutList extends Component {
                 const res = JSON.parse(doc)
                
                 res.workouts.push(newWorkoutObj)
-                console.log("value of updated value sent to local storage: ", res)
+                
                 this.updateLocalStorage(workoutKey, res)
                 this.updateMongo(res)
             })

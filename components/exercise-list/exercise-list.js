@@ -44,7 +44,7 @@ class ExerciseList extends Component {
     const updateWorkout = navigation.getParam("updateWorkout");
 
     updateWorkout(null, this.props.workouts);
-    console.log("Workouts Object in exList passed to workoutList: ", this.props.workouts)
+    
     
   }
 
@@ -106,7 +106,6 @@ class ExerciseList extends Component {
             body: postBody
           }
         )
-          .then(response => console.log("Success:", response))
           .catch(error => console.log("Error in fetch:", error));
       })
       // Remove all the exercise logs in this workout from local storage.
