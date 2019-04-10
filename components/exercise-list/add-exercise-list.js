@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Modal } from 'react-native'
+import { View, ScrollView, Modal, AsyncStorage } from 'react-native'
 import { Button, Title, TextInput, Searchbar } from 'react-native-paper'
 import ExerciseListItem from './exerciseListItem';
 import { connect } from 'react-redux'
@@ -83,10 +83,8 @@ class AddExerciseList extends Component {
             });
         }
     }
-    
-    componentDidUpdate(){
 
-    }
+    
 
     componentWillUnmount() {
         //   pass array of exercises to add to workout redux action
@@ -97,7 +95,7 @@ class AddExerciseList extends Component {
             workoutId: workoutId,
             exercises: this.state.passToRedux
         };
-      
+      console.log("add-ex-list == updateExInWorkout: ", updateExInWorkout)
         this.props.addExercise(this.state.passToRedux);
         this.props.addExerciseToWorkout(updateExInWorkout);
 

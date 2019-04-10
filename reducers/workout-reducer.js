@@ -1,5 +1,6 @@
 
 
+
 // const INITIAL_STATE = {
 //     userid: 0,
 //     workouts:
@@ -65,6 +66,7 @@ export const workoutReducer = (state = INITIAL_STATE, action) => {
             const workouts = state.workouts.filter(workout => {
                 return workout.id !== workoutId
             })
+            console.log("Returned from add-ex-to-wo reducer: ", {userid: state.userId, workouts: [...workouts, ...newState]})
             // create new state from old workouts appending the new workout object which has been updated with a new exercise.
             return {userid: state.userId, workouts: [...workouts, ...newState]}
         // //  ! UNTESTED !

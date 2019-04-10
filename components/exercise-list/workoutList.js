@@ -56,7 +56,7 @@ class WorkoutList extends Component {
 
                 AsyncStorage.getItem(workoutKey)
                     .then(doc => {
-                        console.log("workouts obj in local storage: ", JSON.parse(doc))
+                        
                         this.props.addInitialWorkout(JSON.parse(doc));
                     })
                     .catch(err =>

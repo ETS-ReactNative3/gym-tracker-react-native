@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
+import { View, StyleSheet, ScrollView, AsyncStorage, Image } from 'react-native';
 import { Card, Title, Button  } from 'react-native-paper'
 import Reps from './reps'
 import Timer from '../timer/timer'
-
+import NoImage from '../../images/noimage.jpg'
 
 export default class ExercisePage extends Component {
     constructor(props) {
@@ -159,7 +159,8 @@ export default class ExercisePage extends Component {
     render() {
         const { navigation } = this.props;
         const exerciseNameProp = navigation.getParam('exerciseName', 'No Name Provided');
-       
+        const exerciseImage = navigation.getParam('exerciseImage', NoImage);
+        
         const repsContainerStyling = {            
             justifyContent: 'space-around',
             alignItems: 'center',
@@ -175,8 +176,8 @@ export default class ExercisePage extends Component {
             <ScrollView>
                 <View style={styles.containerHeader}>
                     <Title style={styles.header}>{exerciseNameProp}</Title>
-                    {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
-                    <View style={styles.imageBox} />
+                    
+                    <Image source={{uri: exerciseImage}} style={styles.imageBox} />
                 </View>
                 <Card elevation={2} style={repsContainerStyling}>
                 
@@ -213,7 +214,6 @@ const styles = StyleSheet.create({
     imageBox: {
         height: 200,
         width: 200,
-        backgroundColor: 'black',
         marginTop: 20,
         alignSelf: 'center'
     },

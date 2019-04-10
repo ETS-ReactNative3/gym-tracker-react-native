@@ -13,7 +13,7 @@ class ExerciseList extends Component {
         this.state = {
             exercises: [],
             itemIdList: [],
-            title: "temp title"
+            title: "Temp title"
         }
 
 
@@ -31,7 +31,7 @@ class ExerciseList extends Component {
         const { navigation } = this.props;
         const title = navigation.getParam('title', 'no title available');
         const exercises = navigation.getParam('exercises', 'no exercises found')
-
+       
         this.setState({
             title: title,
             exercises: exercises,
@@ -66,12 +66,17 @@ class ExerciseList extends Component {
     }
 
     // Takes the record of workouts held in local storage and sends them to MongoDB.
-    saveToMongo() {
+    saveToMongo(workoutId) {
+       
 
         let finalVal
         // Get all values for keys in local storage in the current exercise list.
-        AsyncStorage.multiGet(this.state.exercises, (err, store) => {
+        console.log("this.props.workouts", this.props.workouts)
+        // console.log("this.props.workouts[workoutId].exercises ==> ", this.props.workouts[workoutId])
+        AsyncStorage.multiGet([], (err, store) => {
         //    Map over the return values array and return just the values.
+            
+            console.log("SAVETOMONGO get all keys returned ==> ", store)
             const workoutex = store.map(exercise => {
                 if (exercise[1]) {
                     return JSON.parse(exercise[1])
@@ -84,6 +89,8 @@ class ExerciseList extends Component {
             }
            
         })
+        .catch(error => console.log('Error:', error))
+        
         // Make a POST request to MONGO with the workout log
             .then(() => {
 
@@ -111,7 +118,7 @@ class ExerciseList extends Component {
                 AsyncStorage.multiRemove(this.state.exercises, (error) => console.log("error: ", error))
                 .catch(err => console.log("error: ", err))
             })
-            .catch(error => console.log('Error:', error));
+            
 
     }
 
@@ -140,14 +147,19 @@ class ExerciseList extends Component {
                     <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', {
                         id: workoutId
                     })}>Add exercise</Button>
-                    <Button mode="contained" onPress={() => this.saveToMongo()}>Finish and save workout</Button>
+                    <Button mode="contained" onPress={() => this.saveToMongo(workoutId)}>Finish and save workout</Button>
 
-
-                    {
-                        this.props.workouts[workoutId].exercises.map((ex) => {
-
-                            return <ExerciseListItem style={styles.listItem} exerciseName={ex.exerciseName} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex.exerciseName, exerciseImage: ex.imageUrl })} />
-                        })}
+                    {this.props.workouts.map((workoutObject) => {
+                        
+                            if (workoutObject.id === workoutId) {
+                                return (
+                                    workoutObject.exercises.map(ex => {
+                                        return <ExerciseListItem style={styles.listItem} exerciseName={ex.exerciseName} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex.exerciseName, exerciseImage: ex.imageUrl })} />                   
+                                    })
+                                )
+                            }
+                        
+                    })}
 
                 </ScrollView>
 
