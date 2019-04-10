@@ -16,6 +16,22 @@ const INITIAL_STATE = {
   ]
 }
 
+// exercises: [
+
+//   { id: 1, name: "Benchpress", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/benchpress.jpg" },
+//   { id: 2, name: "Lateral extensions", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/lateralextensions.jpg" },
+//   { id: 3, name: "Bicep curls", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/dumbellcurls.jpg" },
+//   { id: 4, name: "Tricep extensions", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/tricepextensions.jpg" },
+//   { id: 5, name: "Shrugs", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/shrugs.jpg" },
+//   { id: 6, name: "Leg Extensions", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/legextension.jpg" },
+//   { id: 7, name: "Dips", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/dips.jpg" },
+//   { id: 8, name: "Cable Flyes", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/cableflyes.jpg" },
+//   { id: 9, name: "Decline Crunch", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/declinecrunch.png" },
+//   { id: 10, name: "Squat", imageUrl: "https://s3.eu-central-1.amazonaws.com/gym-tracker-node/squat.jpg" },
+
+// ]
+// }
+
 export const exerciseReducer = (state = INITIAL_STATE, action) => {
 
   switch (action.type) {

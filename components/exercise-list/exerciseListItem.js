@@ -2,12 +2,16 @@ import React from 'react'
 import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native'
 import {Button, Card, Title, Avatar, Icon} from 'react-native-paper'
 
+
 const ExerciseListItem = (props) => {
 
     return (
+        
         <TouchableNativeFeedback onPress={props.onPress} onLongPress={props.onLongPress}>
             <Card style={[styles.container, props.buttonSelected]} >
-                <Card.Title style={styles.items} title={props.exerciseName} left={(props) => <Avatar.Icon {...props} icon={'fitness-center'} />} />
+                <Card.Title style={styles.items} title={props.exerciseName} left={() => <Avatar.Icon {...props} icon={props.icon} />} />
+
+                {/* <Card.Title style={styles.items} title={props.exerciseName} left={(props) => console.log('inside icon: ', props) } /> */}
 
             </Card>
         </TouchableNativeFeedback>
@@ -25,6 +29,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         color: 'black',
+        
 
 
     },

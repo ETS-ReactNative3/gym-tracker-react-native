@@ -8,12 +8,15 @@
     "react-devtool": "react-devtools"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.2.2",
+    "mongodb": "^3.2.2",
     "mongodb-stitch-react-native-sdk": "^4.3.0",
     "prop-types": "^15.6.2",
     "react": "16.6.3",
     "react-native": "0.58.3",
     "react-native-elements": "^1.0.0",
     "react-native-gesture-handler": "^1.0.15",
+    "react-native-local-mongodb": "^2.2.7",
     "react-native-paper": "^2.11.1",
     "react-native-vector-icons": "^6.3.0",
     "react-navigation": "^3.2.3",

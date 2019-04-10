@@ -1,3 +1,10 @@
+export const addInitialWorkout = (initialWorkout) => (
+  {
+    type: 'ADD_INITIAL_WORKOUT',
+    payload: initialWorkout,
+  }
+) 
+
 export const addWorkout = (newWorkout) => (
     {
       type: 'ADD_WORKOUT',
@@ -11,4 +18,10 @@ export const addExerciseToWorkout = (newExercises) => (
       payload: newExercises,
     }
   ) 
-  
+
+  export const deleteExerciseFromWorkout = (exercisesToRemove) => (
+    {
+      type: 'DELETE_EXERCISE_FROM_WORKOUT',
+      payload: exercisesToRemove,
+    }
+  ) 

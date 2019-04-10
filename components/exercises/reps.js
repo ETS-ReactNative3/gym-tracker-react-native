@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
-import { Card, Title, Avatar, Icon, TextInput, Text, IconButton, } from 'react-native-paper'
+import { View, StyleSheet } from 'react-native';
+import { Card, TextInput, IconButton, } from 'react-native-paper'
 
 export default class RecordLine extends Component {
     constructor(props) {

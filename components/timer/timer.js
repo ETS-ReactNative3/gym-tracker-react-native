@@ -30,15 +30,11 @@ export default class TimerModal extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.interval = setInterval(() => this.countdown(), 1000);
-    //     console.log("Timer launched", "Timer length is: ", this.state.length)
-
-    // }
+   
 
     componentWillUnmount() {
         clearInterval(this.interval);
-        console.log("componentWillUnmount LAUNCHED - timer closed")
+        
     }
     render() {
         return (

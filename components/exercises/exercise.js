@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { View, TextInput, Text, StyleSheet, ScrollView } from 'react-native';
-import { Card, Title, Avatar, Icon, Button  } from 'react-native-paper'
+import { View, StyleSheet, ScrollView, AsyncStorage, Image } from 'react-native';
+import { Card, Title, Button  } from 'react-native-paper'
 import Reps from './reps'
 import Timer from '../timer/timer'
-
-
+import NoImage from '../../images/noimage.jpg'
 
 export default class ExercisePage extends Component {
     constructor(props) {
@@ -13,6 +12,8 @@ export default class ExercisePage extends Component {
             numberOfRepsComponents: [1, 2, 3],
             height: 250,
             repRecord: [],
+            repRecordTemp: {},
+            repRow: {},
             modalVisible: false,
             deleteIcon: null
         }
@@ -22,6 +23,16 @@ export default class ExercisePage extends Component {
         this.saveRepRow = this.saveRepRow.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
         
+        
+        
+    }
+
+    componentDidMount(){
+        const { navigation } = this.props;
+        const exerciseName = navigation.getParam('exerciseName', 'No Name Provided');
+        this.setState({
+            exerciseName: exerciseName
+        })
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -43,12 +54,11 @@ export default class ExercisePage extends Component {
             })
             
         } else {
-            console.log("Can't have more than 8 reps")
+            alert("You can't have more than 8 sets")
         }
         
     }
 
-    
 
     // Removes the last rep component line if there are more than 3
     removeReps() {
@@ -68,22 +78,79 @@ export default class ExercisePage extends Component {
         }
     }
 
+     
 
+    // Tracks the number of rep row instances in order to safely add and delete them as components. 
     saveRepRow(repRow, id) {
         repRow.date = Date.now()
         this.setState({
-            repRecordTemp: { [id]: repRow }
+            repRecordTemp: { [id]: repRow },
+            repRow: repRow
         })
+
+    
     }
 
-    // Need to make sure each rep record line is unique (using id) overwriting the old value.
+    // Persist all ex record data to Async storage:
     saveReps() {
-        this.setState({
-            repRecord: [...this.state.repRecord, this.state.repRecordTemp]
-        })
-        console.log(this.state.repRecord)
+
+        const key = this.state.exerciseName
         
-        // LAUNCH TIMER COMPONENT
+        // check if async contains exercise log obj
+        AsyncStorage.getAllKeys().then(res => {
+            if (res.includes(key)) {
+                // if yes - append new rep record to end of workout obj
+                AsyncStorage.getItem(key).then(doc => {
+
+                    const prevWoObj = JSON.parse(doc)
+
+                    
+
+                    // Dynamically increasing key number - used as set ID
+                    
+                    const idVal = Object.keys(prevWoObj[key]).length
+                    
+                    
+
+
+                    // adding new set to the exercise log object
+                    prevWoObj[key][idVal] = this.state.repRow
+
+                    
+
+                    // saving exercise log object to local storage
+                    AsyncStorage.setItem(key, JSON.stringify(prevWoObj), err => console.log("error in final set item: ", err))
+                        
+                        .catch(err => console.log("Error: ", err))
+                    AsyncStorage.getItem(key).then(doc => console.log("HALLELUJAH: (inside if) ", JSON.parse(doc)))
+                })
+                    .catch(err => console.log("Error: ", err))
+
+
+            } else {
+                //  if no - create new obj and save reprow to it
+                const woObj = {
+                    [key]: {
+                        0: this.state.repRow
+                    }
+                }
+                AsyncStorage.setItem(key, JSON.stringify(woObj))
+                    .catch(err => console.log("Error: ", err))
+                // console.log
+                AsyncStorage.getItem(key)
+                    .then(doc => console.log("Value of workout in Async storage: (inside else) ", JSON.parse(doc)))
+                    .catch(err => console.log("Error: ", err))
+            }
+        })
+        .catch(err=>console.log("Error: ", err))
+         
+        this.setState({
+            repRecord: [...this.state.repRecord, this.state.repRecordTemp],
+            
+        })
+        
+        
+        // Launch timer component
         this.setModalVisible()
     }
 
@@ -92,9 +159,9 @@ export default class ExercisePage extends Component {
     render() {
         const { navigation } = this.props;
         const exerciseNameProp = navigation.getParam('exerciseName', 'No Name Provided');
-       
-        const repsContainerStyling = {
-            // flexDirection: 'column',
+        const exerciseImage = navigation.getParam('exerciseImage', NoImage);
+        
+        const repsContainerStyling = {            
             justifyContent: 'space-around',
             alignItems: 'center',
             padding: 5,
@@ -109,8 +176,8 @@ export default class ExercisePage extends Component {
             <ScrollView>
                 <View style={styles.containerHeader}>
                     <Title style={styles.header}>{exerciseNameProp}</Title>
-                    {/* This will be replaced with a dynamically loading image of the exercise, passed as a prop */}
-                    <View style={styles.imageBox} />
+                    
+                    <Image source={{uri: exerciseImage}} style={styles.imageBox} />
                 </View>
                 <Card elevation={2} style={repsContainerStyling}>
                 
@@ -127,7 +194,7 @@ export default class ExercisePage extends Component {
                 <View style={styles.buttonRow}>
                     <Button mode="contained" style={styles.buttonAdd} onPress={this.addExtraReps} >Add reps</Button>
                     <Button mode="contained" onPress={this.setModalVisible}>Timer</Button>
-                    <Button mode="contained" >Notes</Button>
+                    <Button mode="contained" disabled={true}>Notes</Button>
                 </View>
 
                 <Timer setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} />
@@ -147,7 +214,6 @@ const styles = StyleSheet.create({
     imageBox: {
         height: 200,
         width: 200,
-        backgroundColor: 'black',
         marginTop: 20,
         alignSelf: 'center'
     },

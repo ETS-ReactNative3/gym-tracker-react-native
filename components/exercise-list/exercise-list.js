@@ -1,169 +1,257 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, ScrollView } from 'react-native'
-import { Button, Card, Title, Avatar, Icon } from 'react-native-paper'
-import ExerciseListItem from './exerciseListItem'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import { addExercise } from '../../actions/exercise-actions'
+import React, { Component } from "react";
+import { View, StyleSheet, ScrollView, AsyncStorage } from "react-native";
+import { Button, Title, IconButton } from "react-native-paper";
+import ExerciseListItem from "./exerciseListItem";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { addExercise } from "../../actions/exercise-actions";
+import { deleteExerciseFromWorkout } from "../../actions/workout-actions"
 
 
 class ExerciseList extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            exercises: [],
-            itemIdList: [],
-            title: "temp title"
-        }
-       
-        
-        this.toggleHighlightItem = this.toggleHighlightItem.bind(this)
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      exercises: [],
+      itemIdList: [],
+      title: "Temp title",
+      exercisesToRemove: []
+    };
 
-      static navigationOptions = ({ navigation }) => {
-        return {
-          title: navigation.getParam('title', 'Workout'),
-        };
-      };
-
-    componentDidMount() {
-        const { navigation } = this.props;
-        const title = navigation.getParam('title', 'no title available');
-        const exercises = navigation.getParam('exercises', 'no exercises found')
-        
-        this.setState({
-            title: title,
-            exercises: exercises,
-            modalVisible: false
-        })
-    }
-    
-    
-
-    
+    this.toggleHighlightItem = this.toggleHighlightItem.bind(this);
+    this.saveToMongo = this.saveToMongo.bind(this);
    
+  }
 
-    toggleHighlightItem(name) {
-        if (!this.state.itemIdList.includes(name)) {
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      title: navigation.getParam("title", "Workout"),
+      headerRight: (<IconButton icon="delete" onPress={() => params.exercisesToRemove()} />)
+    };
+  };
 
-            this.setState({
-                itemIdList: [...this.state.itemIdList, name]
-
-            })
-        // show delete button in navbar
-        } else {
-            // if itemIdList is empty - remove navbar button
-
-            let removedElementArr = this.state.itemIdList.filter((el) => {
-
-                return el !== name
-
-            })
-
-            this.setState({
-                itemIdList: removedElementArr
-
-            })
-        }
-
-
+  exercisesToRemove(){
+    const payload = {
+        exercisesToRemove: this.state.exercisesToRemove, 
+        newWorkoutId: this.state.workoutId
     }
+    this.props.deleteExerciseFromWorkout(payload)
+    this.setState({
+        exercisesToRemove: []
+    })
+  }
+  
+  componentDidMount() {
+    this.props.navigation.setParams({ exercisesToRemove: this.exercisesToRemove.bind(this) });
+    const { navigation } = this.props;
+    const title = navigation.getParam("title", "no title available");
+    const exercises = navigation.getParam("exercises", "no exercises found");
+    const workoutId = navigation.getParam("id", "no workout ID found");
+    
+    this.setState({
+      title: title,
+      exercises: exercises,
+      modalVisible: false,
+      workoutId: workoutId
+    });
+  }
 
+//   Every time state is updated, updateworkout in parent workoutlist is called - which will save the new workouts object to local storage and update Mongo
+  componentDidUpdate() {
+    const { navigation } = this.props;
+    const updateWorkout = navigation.getParam("updateWorkout");
 
-    render() {
-        const { navigation } = this.props;
-        const workoutId = navigation.getParam('id', 'no id found')
-     
+    updateWorkout(null, this.props.workouts);
+    
+    
+  }
 
-        const style = {
-            highlighted: {
-                backgroundColor: 'red'
+  toggleHighlightItem(name) {
+    if (!this.state.itemIdList.includes(name)) {
+      this.setState({
+        itemIdList: [...this.state.itemIdList, name]
+      });
+      // show delete button in navbar
+    } else {
+      // if itemIdList is empty - remove navbar button
+
+      let removedElementArr = this.state.itemIdList.filter(el => {
+        return el !== name;
+      });
+
+      this.setState({
+        itemIdList: removedElementArr
+      });
+    }
+  }
+
+  // Takes the record of workouts held in local storage and sends them to MongoDB.
+  saveToMongo(workoutId) {
+    let finalVal;
+    // Get all values for keys in local storage in the current exercise list.
+
+    AsyncStorage.multiGet([], (err, store) => {
+      //    Map over the return values array and return just the values.
+
+      const workoutex = store.map(exercise => {
+        if (exercise[1]) {
+          return JSON.parse(exercise[1]);
+        } else return;
+      });
+      // put the exercise logs array in an object with a date key
+      finalVal = {
+        userID: "01",
+        [Date.now()]: workoutex
+      };
+    })
+      .catch(error => console.log("Error:", error))
+
+      // Make a POST request to MONGO with the workout log
+      .then(() => {
+        // FETCH POST -->
+        const postBody = JSON.stringify({
+          workout: finalVal
+        });
+
+        fetch(
+          "http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
             },
-            unHighlighted: {
-                backgroundColor: 'white'
-            }
-        }
-        
-        if(this.props.workouts[workoutId].exercises){
-            return (
-                <ScrollView style={styles.scrollView}>
-    
-                    <View>
-                        <Title style={styles.header}>{this.state.title}</Title>
-                    </View>
-                    <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList', {
-                        id: workoutId
-                    })}>Add exercise</Button>
-    
-    
-                    {
-                        this.props.workouts[workoutId].exercises.map((ex) => {
-    
-                        return <ExerciseListItem style={styles.listItem} exerciseName={ex} key={Math.random()} onPress={() => this.props.navigation.navigate('Exercises', { exerciseName: ex })} /> //onLongPress={() => this.toggleHighlightItem(ex)} buttonSelected={this.state.itemIdList.includes(ex) ? style.highlighted : style.unHighlighted} />
-                    })}
-    
-                </ScrollView>
-    
-    
-            )
-        } else {
-            return (
-                <ScrollView style={styles.scrollView}>
-    
-                    <View>
-                        <Title style={styles.header}>{this.state.title}</Title>
-                    </View>
-                    <Button icon="add" mode="contained" onPress={() => this.props.navigation.navigate('AddExerciseList')}>Add exercise</Button>
-    
-    
-                   
-                    
-    
-                </ScrollView>
-    
-    
-            )
-        }
+            body: postBody
+          }
+        )
+          .catch(error => console.log("Error in fetch:", error));
+      })
+      // Remove all the exercise logs in this workout from local storage.
+      .then(() => {
+        AsyncStorage.multiRemove(this.state.exercises, error =>
+          console.log("error: ", error)
+        ).catch(err => console.log("error: ", err));
+      });
+  }
 
-        
-    }
+  render() {
+    const { navigation } = this.props;
+    const workoutId = navigation.getParam("id", "no id found");
+
+    const style = {
+      highlighted: {
+        backgroundColor: "red"
+      },
+      unHighlighted: {
+        backgroundColor: "white"
+      }
+    };
+
+    return (
+      <ScrollView style={styles.scrollView}>
+        <View>
+          <Title style={styles.header}>{this.state.title}</Title>
+        </View>
+        <Button
+          icon="add"
+          mode="contained"
+          onPress={() =>
+            this.props.navigation.navigate("AddExerciseList", {
+              id: workoutId
+            })
+          }
+        >
+          Add exercise
+        </Button>
+        <Button mode="contained" onPress={() => this.saveToMongo(workoutId)}>
+          Finish and save workout
+        </Button>
+
+        {this.props.workouts.map(workoutObject => {
+          if (workoutObject.id === workoutId) {
+            return workoutObject.exercises.map(ex => {
+              return (
+                <ExerciseListItem
+                buttonSelected={
+                    this.state.exercisesToRemove.includes(ex._id)
+                        ? style.highlighted
+                        : style.unHighlighted
+                }
+                  style={styles.listItem}
+                  icon={this.state.exercisesToRemove.includes(ex._id) ? 'delete' : 'fitness-center'}
+                  size={40}
+                  exerciseName={ex.exerciseName}
+                  key={Math.random()}
+                  onPress={() =>
+                    this.props.navigation.navigate("Exercises", {
+                      exerciseName: ex.exerciseName,
+                      exerciseImage: ex.imageUrl
+                    })
+                  }
+                  onLongPress={() => {
+                    if(!this.state.exercisesToRemove.includes(ex._id)){
+                        this.setState({
+                            exercisesToRemove: [...this.state.exercisesToRemove, ex._id]
+                        }, () => console.log("Ex to delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
+                    } else {
+                        const removeExFromArr = this.state.exercisesToRemove.filter(exerciseId => {
+                        
+                            return ex._id !== exerciseId 
+                        })
+                       
+                        this.setState({
+                            exercisesToRemove: removeExFromArr
+                        }, () => console.log("Ex to NO LONGER delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
+                    }
+                    
+                  }}
+                />
+              );
+            });
+          }
+        })}
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-
-    },
-    header: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        alignSelf: 'center',
-        color: 'black',
-        marginBottom: 20,
-        marginTop: 20
-    },
-    scrollView: {
-        flex: 1,
-        width: '90%',
-        alignSelf: 'center',
-
-    },
-
-
+  container: {
+    flex: 1
+  },
+  header: {
+    fontSize: 30,
+    fontWeight: "bold",
+    alignSelf: "center",
+    color: "black",
+    marginBottom: 20,
+    marginTop: 20
+  },
+  scrollView: {
+    flex: 1,
+    width: "90%",
+    alignSelf: "center"
+  }
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
+  const { exercises } = state.exerciseReducer;
+  const { workouts } = state.workoutReducer;
 
-    const { exercises } = state.exerciseReducer
-    const { workouts } = state.workoutReducer
-  
-    return { exercises, workouts }
-  };
+  return { exercises, workouts };
+};
 
-const mapDispatchToProps = dispatch => (
-    bindActionCreators({
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
       addExercise,
-    }, dispatch)
-);
-  
-export default connect(mapStateToProps, mapDispatchToProps)(ExerciseList);
+      deleteExerciseFromWorkout
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ExerciseList);
