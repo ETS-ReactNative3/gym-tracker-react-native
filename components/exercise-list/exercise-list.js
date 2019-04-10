@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { View, StyleSheet, ScrollView, AsyncStorage } from "react-native";
-import { Button, Title } from "react-native-paper";
+import { Button, Title, IconButton } from "react-native-paper";
 import ExerciseListItem from "./exerciseListItem";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addExercise } from "../../actions/exercise-actions";
+import { deleteExerciseFromWorkout } from "../../actions/workout-actions"
 
 
 class ExerciseList extends Component {
@@ -13,28 +14,43 @@ class ExerciseList extends Component {
     this.state = {
       exercises: [],
       itemIdList: [],
-      title: "Temp title"
+      title: "Temp title",
+      exercisesToRemove: []
     };
 
     this.toggleHighlightItem = this.toggleHighlightItem.bind(this);
     this.saveToMongo = this.saveToMongo.bind(this);
+   
   }
 
   static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
     return {
-      title: navigation.getParam("title", "Workout")
+      title: navigation.getParam("title", "Workout"),
+      headerRight: (<IconButton icon="delete" onPress={() => params.exercisesToRemove()} />)
     };
   };
 
+  exercisesToRemove(){
+    const payload = {
+        exercisesToRemove: this.state.exercisesToRemove, 
+        newWorkoutId: this.state.workoutId
+    }
+    this.props.deleteExerciseFromWorkout(payload)
+  }
+  
   componentDidMount() {
+    this.props.navigation.setParams({ exercisesToRemove: this.exercisesToRemove.bind(this) });
     const { navigation } = this.props;
     const title = navigation.getParam("title", "no title available");
     const exercises = navigation.getParam("exercises", "no exercises found");
-
+    const workoutId = navigation.getParam("id", "no workout ID found");
+    
     this.setState({
       title: title,
       exercises: exercises,
-      modalVisible: false
+      modalVisible: false,
+      workoutId: workoutId
     });
   }
 
@@ -155,6 +171,9 @@ class ExerciseList extends Component {
               return (
                 <ExerciseListItem
                   style={styles.listItem}
+
+                
+                  icon={this.state.exercisesToRemove.includes(ex.id) ? 'delete' : 'fitness-center'}
                   exerciseName={ex.exerciseName}
                   key={Math.random()}
                   onPress={() =>
@@ -163,6 +182,23 @@ class ExerciseList extends Component {
                       exerciseImage: ex.imageUrl
                     })
                   }
+                  onLongPress={() => {
+                    if(!this.state.exercisesToRemove.includes(ex._id)){
+                        this.setState({
+                            exercisesToRemove: [...this.state.exercisesToRemove, ex._id]
+                        })
+                    } else {
+                        const removeExFromArr = this.state.exercisesToRemove.filter(exerciseId => {
+                        
+                            return ex._id !== exerciseId 
+                        })
+                       
+                        this.setState({
+                            exercisesToRemove: removeExFromArr
+                        })
+                    }
+                    
+                  }}
                 />
               );
             });
@@ -202,7 +238,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      addExercise
+      addExercise,
+      deleteExerciseFromWorkout
     },
     dispatch
   );

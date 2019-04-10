@@ -18,4 +18,10 @@ export const addExerciseToWorkout = (newExercises) => (
       payload: newExercises,
     }
   ) 
-  
+
+  export const deleteExerciseFromWorkout = (exercisesToRemove) => (
+    {
+      type: 'DELETE_EXERCISE_FROM_WORKOUT',
+      payload: exercisesToRemove,
+    }
+  ) 

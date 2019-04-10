@@ -245,7 +245,8 @@ class WorkoutList extends Component {
                                         id: workout.id,
                                         title: workout.name,
                                         exercises: workout.exercises,
-                                        updateWorkout: (key, data) => this.updateWorkout(key, data)
+                                        updateWorkout: (key, data) => this.updateWorkout(key, data),
+                                        
                                     })
                                 }
                             >

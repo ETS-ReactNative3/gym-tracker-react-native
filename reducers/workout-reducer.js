@@ -1,6 +1,4 @@
 
-
-
 // const INITIAL_STATE = {
 //     userid: 0,
 //     workouts:
@@ -69,11 +67,28 @@ export const workoutReducer = (state = INITIAL_STATE, action) => {
             
             // create new state from old workouts appending the new workout object which has been updated with a new exercise.
             return {userid: state.userId, workouts: [...workouts, ...newState]}
+        case 'DELETE_EXERCISE_FROM_WORKOUT':
+            const {exercisesToRemove, newWorkoutId} = action.payload
+            const workoutObject = state.workouts.filter((workout) => {
+                return workout.id === newWorkoutId
+            })
+            const newExerciseArr = workoutObject[0].exercises.filter(ex => {
+                if(!exercisesToRemove.includes(ex._id)){
+                    return ex
+                } else return
+            })
+            // add newExerciseArr to the workout workoutObject
+            workoutObject[0].exercises = newExerciseArr
+            // add workoutObject back to state and return it
+            const otherWorkouts = state.workouts.filter(workout => {
+                return workout.id !== newWorkoutId
+            })
+            return {userid: state.userId, workouts: [...otherWorkouts, ...workoutObject]}
         // //  ! UNTESTED !
         // case 'DELETE_WORKOUT':
         //     const deletedItem = action.payload
         //     const newState = state.filter((item) => item != deletedItem)
-        //     return [state, newState]
+        //     return newState
         // case 'EDIT_WORKOUT':
         //     const updatedItem = action.payload
         //     const newState = state.filter((item) => item != updatedItem)

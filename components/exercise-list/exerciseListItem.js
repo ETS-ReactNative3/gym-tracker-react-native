@@ -7,7 +7,7 @@ const ExerciseListItem = (props) => {
     return (
         <TouchableNativeFeedback onPress={props.onPress} onLongPress={props.onLongPress}>
             <Card style={[styles.container, props.buttonSelected]} >
-                <Card.Title style={styles.items} title={props.exerciseName} left={(props) => <Avatar.Icon {...props} icon={'fitness-center'} />} />
+                <Card.Title style={styles.items} title={props.exerciseName} left={(props) => <Avatar.Icon {...props} icon={props.icon} />} />
 
             </Card>
         </TouchableNativeFeedback>
