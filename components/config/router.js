@@ -3,9 +3,9 @@ import {
     createAppContainer,
     createMaterialTopTabNavigator,
     createStackNavigator} from 'react-navigation';
-import { Icon } from 'react-native-elements';
 
-import Auth from '../auth'
+import Auth from '../auth/index'
+import Register from '../auth/register'
 import Home from '../home'
 import ExercisePage from '../exercises/exercise';
 import ExerciseList from '../exercise-list/exercise-list'
@@ -15,6 +15,7 @@ import AddExerciseList from '../exercise-list/add-exercise-list'
 export const Route = createStackNavigator(
     {   
         Auth: { screen: Auth },
+        Register: { screen: Register},
         Home: { screen: Home },
         Exercises: { screen: ExercisePage },
         CreateList: { screen: WorkoutList },
@@ -22,7 +23,7 @@ export const Route = createStackNavigator(
         AddExerciseList: {screen: AddExerciseList }
     },
     {
-        initialRouteName: 'Home'
+        initialRouteName: 'Auth'
     }
 
 );
