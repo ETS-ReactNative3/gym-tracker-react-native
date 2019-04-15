@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, StyleSheet, Text, View, AsyncStorage } from "react-native";
-import LoginScreen from './login/'
+import LoginScreen from './login'
 import WorkoutList from '../exercise-list/workoutList'
 // import RegisterScreen from './register'
 
@@ -16,8 +16,7 @@ export default class Auth extends React.Component {
 
   //   Checking local storage if user id is stored
   componentDidMount() {
-    AsyncStorage.removeItem("gym-tracker-userId")
-
+    console.log("User signed in")
     AsyncStorage.getItem("gym-tracker-userId")
       .then(user => {
         const retUser = user

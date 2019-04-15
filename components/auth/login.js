@@ -31,17 +31,17 @@ class LoginScreen extends Component {
   signIn() {
     if (this.state.email && this.state.password) {
       // Check mongo for match
-
+      console.log("User signed in")
       const body = {
         password: this.state.password
       };
 
+      const email = this.state.email.toLowerCase()
+
       const stringBody = JSON.stringify(body);
 
       fetch(
-        `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/user/login/${
-          this.state.email
-        }`,
+        `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/user/login/${email}`,
         {
           method: "POST",
           headers: {
@@ -53,12 +53,12 @@ class LoginScreen extends Component {
       )
         .then(res => {
           const resBody = JSON.parse(res._bodyText);
-
+          console.log("User signed in fetch", resBody)
           if (resBody.authenticated === true) {
-            this.props.addBlankWorkout(resBody.userId);
-
+           
             AsyncStorage.setItem("gym-tracker-userId", resBody.userId)
               .then(() => {
+                console.log("User should be forwarded to HOME")
                 this.userRegistered();
               })
               .catch(err => console.log("error: ", err));
@@ -74,7 +74,8 @@ class LoginScreen extends Component {
 
  
   userRegistered(id) {
-    this.props.navigation.navigate("Home", {});
+    console.log("userRegistered fired")
+    this.props.navigation.navigate("CreateList", {});
   }
 
   render() {
@@ -87,7 +88,7 @@ class LoginScreen extends Component {
               mode="outlined"
               label="Email"
               placeholder="Email"
-              onChangeText={e => this.setState({ email: e.toLowerCase() })}
+              onChangeText={e => this.setState({ email: e })}
               value={this.state.email}
             />
             <TextInput

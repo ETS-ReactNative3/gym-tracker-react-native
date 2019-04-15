@@ -25,17 +25,18 @@ export default class RegisterScreen extends Component {
 
   signUp() {
     const emailRegex = /^\S+@\S+\.\S+$/;
+    const email = this.state.email.toLowerCase()
 
-    if (emailRegex.test(this.state.email) && this.state.password) {
+    if (emailRegex.test(email) && this.state.password) {
       console.log(
         "User clicked sign Up",
-        this.state.email,
+        email,
         this.state.password
       );
       // Check server if user exists
       fetch(
         `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/user/email/${
-          this.state.email
+          email
         }`,
         {
           method: "GET",
@@ -54,7 +55,7 @@ export default class RegisterScreen extends Component {
             //   Create new user in Mongo user collection
 
             const body = {
-              email: this.state.email,
+              email: email,
               password: this.state.password
             };
 
@@ -114,7 +115,7 @@ export default class RegisterScreen extends Component {
               mode="outlined"
               label="Email"
               placeholder="Email"
-              onChangeText={e => this.setState({ email: e.toLowerCase() })}
+              onChangeText={e => this.setState({ email: e })}
               value={this.state.email}
             />
             <TextInput
