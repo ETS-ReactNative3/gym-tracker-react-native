@@ -95,9 +95,15 @@ class ExerciseList extends Component {
     let finalVal;
     // Get all values for keys in local storage in the current exercise list.
 
-    AsyncStorage.multiGet([], (err, store) => {
+
+const exNames = this.state.exercises.map(exObj => {
+  return exObj.exerciseName
+})
+console.log("EX LIST 97 - exNames => ", exNames)
+
+    AsyncStorage.multiGet(exNames, (err, store) => {
       //    Map over the return values array and return just the values.
-      
+      console.log("EX LIST - 101 -Error in get store", err)
       console.log("exercise-list => Save to mongo fired", "store: ", store)
 
       const workoutex = store.map(exercise => {
@@ -133,11 +139,12 @@ class ExerciseList extends Component {
             body: postBody
           }
         )
+        .then(res => console.log("EXLIST 142 - res; ", JSON.parse(res._bodyInit)))
           .catch(error => console.log("Error in fetch:", error));
       })
       // Remove all the exercise logs in this workout from local storage.
       .then(() => {
-        AsyncStorage.multiRemove(this.state.exercises, error =>
+        AsyncStorage.multiRemove(exNames, error =>
           console.log("error: ", error)
         ).catch(err => console.log("error: ", err));
       });
