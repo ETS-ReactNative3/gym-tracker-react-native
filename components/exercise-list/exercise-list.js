@@ -64,7 +64,6 @@ class ExerciseList extends Component {
     const { navigation } = this.props;
     const updateWorkout = navigation.getParam("updateWorkout");
     
-    console.log("Ex List - comp did update = updateWorkout passed => ", this.props.workouts)
     updateWorkout(null, this.props.workouts);
     
     
@@ -91,7 +90,7 @@ class ExerciseList extends Component {
 
   // Takes the record of workouts held in local storage and sends them to MongoDB.
   saveToMongo(workoutId) {
-    console.log("exercise-list => Save to mongo fired", "workoutid: ", workoutId)
+   
     let finalVal;
     // Get all values for keys in local storage in the current exercise list.
 
@@ -99,13 +98,11 @@ class ExerciseList extends Component {
 const exNames = this.state.exercises.map(exObj => {
   return exObj.exerciseName
 })
-console.log("EX LIST 97 - exNames => ", exNames)
+
 
     AsyncStorage.multiGet(exNames, (err, store) => {
       //    Map over the return values array and return just the values.
-      console.log("EX LIST - 101 -Error in get store", err)
-      console.log("exercise-list => Save to mongo fired", "store: ", store)
-
+      
       const workoutex = store.map(exercise => {
         if (exercise[1]) {
           return JSON.parse(exercise[1]);
@@ -126,8 +123,7 @@ console.log("EX LIST 97 - exNames => ", exNames)
           workout: finalVal
         });
         
-        console.log("Exercise list => line 118 - POST object - ", JSON.parse(postBody))
-        
+              
         fetch(
           "http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/",
           {
@@ -139,7 +135,7 @@ console.log("EX LIST 97 - exNames => ", exNames)
             body: postBody
           }
         )
-        .then(res => console.log("EXLIST 142 - res; ", JSON.parse(res._bodyInit)))
+       
           .catch(error => console.log("Error in fetch:", error));
       })
       // Remove all the exercise logs in this workout from local storage.
@@ -208,7 +204,7 @@ console.log("EX LIST 97 - exNames => ", exNames)
                     if(!this.state.exercisesToRemove.includes(ex._id)){
                         this.setState({
                             exercisesToRemove: [...this.state.exercisesToRemove, ex._id]
-                        }, () => console.log("Ex to delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
+                        })
                     } else {
                         const removeExFromArr = this.state.exercisesToRemove.filter(exerciseId => {
                         
@@ -217,7 +213,7 @@ console.log("EX LIST 97 - exNames => ", exNames)
                        
                         this.setState({
                             exercisesToRemove: removeExFromArr
-                        }, () => console.log("Ex to NO LONGER delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
+                        })
                     }
                     
                   }}

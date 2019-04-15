@@ -62,10 +62,10 @@ class WorkoutList extends Component {
         
       const savedWorkouts = JSON.parse(doc);
       
-      console.log("savedWorkouts: ", savedWorkouts)
+      
 
       if(savedWorkouts) {
-       console.log("Value of user id: ", "let set userId => ", userId, "savedWorkouts.userid ==>", savedWorkouts.userid)
+      
           if (savedWorkouts.userid === userId) {
            
               this.props.addInitialWorkout(savedWorkouts)
@@ -76,7 +76,7 @@ class WorkoutList extends Component {
               
             }
       } else {
-        console.log("fetch Workouts called: ")
+        
 
           fetch(
               `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout-list/${
@@ -96,7 +96,7 @@ class WorkoutList extends Component {
               .then(res => {
                 // send to action creator - update redux state & save to local storage
                 if (res.length > 0) {
-                    console.log("fetch GET workout in CDM - res: ", res)
+                   
                   this.props.addInitialWorkout(res[0]);
                   AsyncStorage.setItem(workoutKey, JSON.stringify(res[0]))
                   .catch(err => console.log("Error setting fetch response to local storage: ",err));
@@ -155,10 +155,10 @@ class WorkoutList extends Component {
   updateMongo(body) {
     // take local storage object and PUT to mongo
         const recordID = body._id;
-        console.log("Savign workout to MONGO: ", body, "recordID: ", recordID)
+        
         const postBody = JSON.stringify(body);
     if(recordID) {
-        console.log("workoutlist line 160 - PUT fetch")
+       
         fetch(
         `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout-list/${recordID}`,
         {
@@ -172,7 +172,7 @@ class WorkoutList extends Component {
         ).catch(error => console.log("Error in fetch:", error));
 
     } else {
-        console.log("workoutlist line 174 - POST fetch")
+       
         fetch(
             `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout-list/`,
             {
@@ -209,9 +209,9 @@ class WorkoutList extends Component {
       // save to local storage
       AsyncStorage.getItem(workoutKey)
         .then(doc => {
-            console.log("Add new workout workoutlist line 190: ", doc)
+           
           const res = JSON.parse(doc);
-          console.log("ADDNEWWORKOUT workoutlist line 192 :", res);
+        
           res.workouts.push(newWorkoutObj);
 
           this.updateLocalStorage(workoutKey, res);

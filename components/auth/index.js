@@ -16,11 +16,11 @@ export default class Auth extends React.Component {
 
   //   Checking local storage if user id is stored
   componentDidMount() {
-    
+
     AsyncStorage.getItem("gym-tracker-userId")
       .then(user => {
         const retUser = user
-        console.log("gym-tracker-userId in auth", retUser)
+       
         if (retUser) {
           this.setState({
             currentUserId: retUser,

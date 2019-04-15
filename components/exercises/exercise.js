@@ -64,9 +64,9 @@ export default class ExercisePage extends Component {
     removeReps() {
         if (this.state.numberOfRepsComponents.length <= 3) {
             
-            return console.log("There aren't any reps components to remove")
+            return 
         } else {
-            console.log("Removing reps")
+            
             const newState = this.state.numberOfRepsComponents
             newState.pop()
 
@@ -95,18 +95,16 @@ export default class ExercisePage extends Component {
     saveReps() {
 
         const key = this.state.exerciseName
-        console.log("EX - Ex name - ", key)
+      
         
         // check if async contains exercise log obj
         AsyncStorage.getAllKeys().then(res => {
-            console.log("EX - All keys in LS - ", res)
+         
             if (res.includes(key)) {
                 // if yes - append new rep record to end of workout obj
                 AsyncStorage.getItem(key).then(doc => {
 
                     const prevWoObj = JSON.parse(doc)
-                    console.log("EX - prevWoObj - ", prevWoObj)
-                    
 
                     // Dynamically increasing key number - used as set ID
                     
@@ -117,14 +115,12 @@ export default class ExercisePage extends Component {
 
                     // adding new set to the exercise log object
                     prevWoObj[key][idVal] = this.state.repRow
-                    console.log("EX - prevWoObj line 120 - ", prevWoObj)
+                    
                     
 
                     // saving exercise log object to local storage
                     AsyncStorage.setItem(key, JSON.stringify(prevWoObj), err => console.log("error in final set item: ", err))
-                        .then(()=> {
-                            AsyncStorage.getItem(key).then(doc => console.log("HALLELUJAH: (inside if) ", JSON.parse(doc)))
-                        })
+                        
                         .catch(err => console.log("Error: ", err))
                    
                 })
@@ -139,9 +135,7 @@ export default class ExercisePage extends Component {
                     }
                 }
                 AsyncStorage.setItem(key, JSON.stringify(woObj))
-                .then(()=> {
-                    AsyncStorage.getItem(key).then(doc => console.log("EX - line 143 - ", JSON.parse(doc)))
-                })
+               
                     .catch(err => console.log("Error: ", err))
                 
             }

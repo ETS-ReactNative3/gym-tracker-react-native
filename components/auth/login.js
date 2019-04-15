@@ -48,10 +48,10 @@ class LoginScreen extends Component {
       )
         .then(res => {
           const resBody = JSON.parse(res._bodyText);
-          console.log("Signin output: ", resBody);
+         
           if (resBody.authenticated === true) {
             this.props.addBlankWorkout(resBody.userId)
-            console.log("User signed in GREAT ", resBody);
+          
             AsyncStorage.setItem("gym-tracker-userId", resBody.userId)
               .then(() => {
                 
@@ -72,7 +72,7 @@ class LoginScreen extends Component {
 
   // userRegistered = (id) => {
   userRegistered(id) {
-    console.log("userRegistered fired");
+   
     this.props.navigation.navigate("Home", {});
   }
 
