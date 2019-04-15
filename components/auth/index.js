@@ -17,6 +17,7 @@ export default class Auth extends React.Component {
   //   Checking local storage if user id is stored
   componentDidMount() {
     console.log("User signed in")
+
     AsyncStorage.getItem("gym-tracker-userId")
       .then(user => {
         const retUser = user

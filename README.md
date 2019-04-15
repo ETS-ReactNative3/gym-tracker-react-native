@@ -1,16 +1,15 @@
 # gym-tracker-react-native
 
 ### TLDR Description
-Native android app to record workouts in the gym. 
-Part of a larger web app project.
-Hooked into a Node-Mongo server.
+Native android app written in React Native - to record workouts in the gym. 
+Hooked into a Node-Express-Mongo server hosted on AWS EC2. 
 
 ### Description
-This is part of a MERN web app eco-system hosted on AWS. 
-The backend is a MongoDB database hosted on Mongo Atlas, accessed through a Node-Express server (running on AWS).
-The initial inspiration for this project was to open up my gym data so I can monitor my fitness and gym performance more closely, importing it into a database (which will form another project).
+This is part of a MERN app hosted on AWS. 
+The backend is a MongoDB database hosted on Mongo Atlas, accessed through a Node-Express server (running on an AWS EC2 instance).
+The initial inspiration for this project was to open up my gym data so I can monitor my fitness and gym performance more closely, importing it into a database for trend analysis (which will form another project).
 
-<----- INSERT SCREEN SHOTS HERE ----->
+<img src="https://s3.eu-central-1.amazonaws.com/gym-tracker-node/gymtrackerwalkthrough.gif" title="Walkthrough of the Gym Tracker android app"> 
 
 ### Technologies Used: 
 + React Native
@@ -18,16 +17,25 @@ The initial inspiration for this project was to open up my gym data so I can mon
 + Redux
 + Javascript ES6
 + MongoDB
-+ Node server (in another repo here: INSERT LINK)
-+ Google  OAuth2
++ Node server (Mongoose, Express) (in another repo here: <a href="https://github.com/dk03/gym-tracker-node-server">HERE</a>)
++ Authentication
 + React native paper
-+ React-Native-Local-MongoDB
-
-### List of lessons learned can be found here: <LINK>
++ AWS
 
 ### What I would do differently:
++ Implement Redux from the very beginning, instead of refactoring several times to implement redux.
++ Plan the data flow from the beginning and design the architecture around this.
++ Host the Node server on AWS Elastic Beanstalk.
++ Implement unit testing from the beginning. 
 
-### Use a working version:
-+ Download the React Native for android app here: <INSERT LINK>
-+ Web app here: <INSERT LINK>
-+ Repo for the server here: <INSERT LINK>
+### Future plans (in no particular order):
++ Add password hashing.
++ Complete Redux refactoring.
++ Seperate logic and style components.
++ Enfore HTTPS in the server.
++ Move the Node server from EC2 to AWS Elastic Beanstalk.
++ Complete styling.
++ Google and Facebook authentication.
++ A web-app to enable access to historical data. 
+
+### Check out the server <a href="https://github.com/dk03/gym-tracker-react-native/blob/master/lessons.md">HERE</a>
