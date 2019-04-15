@@ -48,12 +48,14 @@ class ExerciseList extends Component {
     const title = navigation.getParam("title", "no title available");
     const exercises = navigation.getParam("exercises", "no exercises found");
     const workoutId = navigation.getParam("id", "no workout ID found");
+    const userId = navigation.getParam("userId", "no user ID found");
     
     this.setState({
       title: title,
       exercises: exercises,
       modalVisible: false,
-      workoutId: workoutId
+      workoutId: workoutId,
+      userID: userId
     });
   }
 
@@ -61,7 +63,7 @@ class ExerciseList extends Component {
   componentDidUpdate() {
     const { navigation } = this.props;
     const updateWorkout = navigation.getParam("updateWorkout");
-
+    
     updateWorkout(null, this.props.workouts);
     
     
@@ -88,12 +90,19 @@ class ExerciseList extends Component {
 
   // Takes the record of workouts held in local storage and sends them to MongoDB.
   saveToMongo(workoutId) {
+   
     let finalVal;
     // Get all values for keys in local storage in the current exercise list.
 
-    AsyncStorage.multiGet([], (err, store) => {
-      //    Map over the return values array and return just the values.
 
+const exNames = this.state.exercises.map(exObj => {
+  return exObj.exerciseName
+})
+
+
+    AsyncStorage.multiGet(exNames, (err, store) => {
+      //    Map over the return values array and return just the values.
+      
       const workoutex = store.map(exercise => {
         if (exercise[1]) {
           return JSON.parse(exercise[1]);
@@ -101,7 +110,7 @@ class ExerciseList extends Component {
       });
       // put the exercise logs array in an object with a date key
       finalVal = {
-        userID: "01",
+        userID: this.state.userID,
         [Date.now()]: workoutex
       };
     })
@@ -113,7 +122,8 @@ class ExerciseList extends Component {
         const postBody = JSON.stringify({
           workout: finalVal
         });
-
+        
+              
         fetch(
           "http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/",
           {
@@ -125,11 +135,12 @@ class ExerciseList extends Component {
             body: postBody
           }
         )
+       
           .catch(error => console.log("Error in fetch:", error));
       })
       // Remove all the exercise logs in this workout from local storage.
       .then(() => {
-        AsyncStorage.multiRemove(this.state.exercises, error =>
+        AsyncStorage.multiRemove(exNames, error =>
           console.log("error: ", error)
         ).catch(err => console.log("error: ", err));
       });
@@ -193,7 +204,7 @@ class ExerciseList extends Component {
                     if(!this.state.exercisesToRemove.includes(ex._id)){
                         this.setState({
                             exercisesToRemove: [...this.state.exercisesToRemove, ex._id]
-                        }, () => console.log("Ex to delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
+                        })
                     } else {
                         const removeExFromArr = this.state.exercisesToRemove.filter(exerciseId => {
                         
@@ -202,7 +213,7 @@ class ExerciseList extends Component {
                        
                         this.setState({
                             exercisesToRemove: removeExFromArr
-                        }, () => console.log("Ex to NO LONGER delete: ", ex.exerciseName, ex._id, this.state.exercisesToRemove))
+                        })
                     }
                     
                   }}

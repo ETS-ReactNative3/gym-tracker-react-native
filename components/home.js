@@ -1,38 +1,21 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Button, TouchableNativeFeedback } from 'react-native';
-import Record from './exercises/reps';
-import ExerciseList from './exercise-list/exercise-list'
-import ExerciseListItem from './exercise-list/exerciseListItem'
-import CreateExerciseList from './exercise-list/workoutList';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { StyleSheet, } from 'react-native';
+import Auth from './auth/index'
+
 
 export default class Home extends Component {
-    constructor(props){
-        super(props)
-
-        this.state = {
-            currentUserId: ''
-        }
-    }
-
-    componentDidMount() {
-        const { navigation } = this.props;
-        const currentUserId = navigation.getParam('currentUserId', undefined);
-
-        this.setState({
-            currentUserId: currentUserId
-        })
-    }
+    
 
     render() {
+       
         return (
-            <PaperProvider>
-                <View style={styles.container}>
+            
+                
 
-                    <CreateExerciseList navigate={this.props.navigation} />
+                    <Auth navigate={this.props.navigation} />
 
-                </View>
-            </PaperProvider>
+               
+            
         );
     }
 }
@@ -44,5 +27,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: '#F5FCFF',
+        width: "100%"
     }
 });
