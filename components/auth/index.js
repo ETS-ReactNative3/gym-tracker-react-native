@@ -16,6 +16,7 @@ export default class Auth extends React.Component {
 
   //   Checking local storage if user id is stored
   componentDidMount() {
+    AsyncStorage.removeItem("gym-tracker-userId")
 
     AsyncStorage.getItem("gym-tracker-userId")
       .then(user => {
@@ -44,9 +45,9 @@ export default class Auth extends React.Component {
         
       } else {
         return (
-          <View>
+        
             <LoginScreen />
-          </View>
+          
         );
       }
     }

@@ -1,10 +1,18 @@
 import React, { Component } from "react";
-import { View, Text, AsyncStorage } from "react-native";
+import {
+  View,
+  Text,
+  AsyncStorage,
+  StyleSheet,
+  ImageBackground
+} from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { withNavigation } from "react-navigation";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import {addBlankWorkout } from "../../actions/workout-actions";
+import { addBlankWorkout } from "../../actions/workout-actions";
+
+import BackgroundImage from "../../images/login.jpg";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -17,11 +25,8 @@ class LoginScreen extends Component {
     this.signIn = this.signIn.bind(this);
     this.userRegistered = this.userRegistered.bind(this);
   }
-  
 
-  static navigationOptions = {
-    title: "Sign In"
-  };
+  
 
   signIn() {
     if (this.state.email && this.state.password) {
@@ -48,20 +53,17 @@ class LoginScreen extends Component {
       )
         .then(res => {
           const resBody = JSON.parse(res._bodyText);
-         
+
           if (resBody.authenticated === true) {
-            this.props.addBlankWorkout(resBody.userId)
-          
+            this.props.addBlankWorkout(resBody.userId);
+
             AsyncStorage.setItem("gym-tracker-userId", resBody.userId)
               .then(() => {
-                
-                this.userRegistered()
-
+                this.userRegistered();
               })
               .catch(err => console.log("error: ", err));
           } else {
-            
-            alert("Incorrect email or password")
+            alert("Incorrect email or password");
           }
         })
         .catch(err => console.log("Error", err));
@@ -70,59 +72,96 @@ class LoginScreen extends Component {
     }
   }
 
-  // userRegistered = (id) => {
+ 
   userRegistered(id) {
-   
     this.props.navigation.navigate("Home", {});
   }
 
   render() {
     return (
-      <View>
-        <View>
-          <Text>Please Login: </Text>
-          <TextInput
-            mode="outlined"
-            label="Email"
-            placeholder="Email"
-            onChangeText={e => this.setState({ email: e.toLowerCase() })}
-            value={this.state.email}
-          />
-          <TextInput
-            mode="outlined"
-            label="Password"
-            placeholder="Password"
-            onChangeText={e => this.setState({ password: e })}
-            value={this.state.password}
-            secureTextEntry={true}
-          />
-          <Button mode="contained" onPress={() => this.signIn()}>
-            Login
-          </Button>
-          <Button
-            mode="contained"
-            onPress={() => {
-              this.props.navigation.navigate("Register", {
-                // pass props here
-                userRegistered: id => this.userRegistered(id)
-              });
-            }}
-          >
-            Register
-          </Button>
+      <ImageBackground style={styles.image} source={BackgroundImage}>
+        <View style={styles.container}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.h1}>Please Login: </Text>
+            <TextInput
+              mode="outlined"
+              label="Email"
+              placeholder="Email"
+              onChangeText={e => this.setState({ email: e.toLowerCase() })}
+              value={this.state.email}
+            />
+            <TextInput
+              mode="outlined"
+              label="Password"
+              placeholder="Password"
+              onChangeText={e => this.setState({ password: e })}
+              value={this.state.password}
+              secureTextEntry={true}
+            />
+            <Button style={styles.button} mode="contained" onPress={() => this.signIn()}>
+              Login
+            </Button>
+            <Button
+              style={styles.button}
+              mode="contained"
+              onPress={() => {
+                this.props.navigation.navigate("Register", {
+                 
+                  userRegistered: id => this.userRegistered(id)
+                });
+              }}
+            >
+              Register
+            </Button>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(
-        {
-            
-            addBlankWorkout
-        },
-        dispatch
-    );
+  bindActionCreators(
+    {
+      addBlankWorkout
+    },
+    dispatch
+  );
 
-export default withNavigation(connect(null,mapDispatchToProps)(LoginScreen))
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    
+  },
+  image: {
+    flex: 1,
+    height: "100%",
+    width: "auto",
+    opacity: 0.7
+  },
+  h1: {
+    color: "#8249E5",
+    fontSize: 32
+  },
+  inputContainer: {
+    width: "75%",
+    height: "auto",
+    backgroundColor: "white",
+    justifyContent: "center",
+    borderRadius: 15,
+    padding: 20
+  },
+  button: {
+    marginTop: 10,
+    opacity: 1
+  }
+});
+
+export default withNavigation(
+  connect(
+    null,
+    mapDispatchToProps
+  )(LoginScreen)
+);

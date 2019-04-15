@@ -9,11 +9,11 @@ export default class Home extends Component {
     render() {
         return (
             <PaperProvider>
-                <View style={styles.container}>
+                
 
                     <Auth navigate={this.props.navigation} />
 
-                </View>
+               
             </PaperProvider>
         );
     }
@@ -26,5 +26,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: '#F5FCFF',
+        width: "100%"
     }
 });
