@@ -9,7 +9,7 @@ This is part of a MERN app hosted on AWS.
 The backend is a MongoDB database hosted on Mongo Atlas, accessed through a Node-Express server (running on an AWS EC2 instance).
 The initial inspiration for this project was to open up my gym data so I can monitor my fitness and gym performance more closely, importing it into a database for trend analysis (which will form another project).
 
-![gymtracker-walkthrough](https://github.com/dk03/gym-tracker-react-native/blob/master/images/gymtrackerwalkthrough.gif)
+![gymtracker-walkthrough](https://github.com/dk03/gym-tracker-react-native/blob/master/images/gymtracker.gif)
 
 ### Technologies Used: 
 + React Native
