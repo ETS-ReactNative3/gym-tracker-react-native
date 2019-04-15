@@ -48,12 +48,14 @@ class ExerciseList extends Component {
     const title = navigation.getParam("title", "no title available");
     const exercises = navigation.getParam("exercises", "no exercises found");
     const workoutId = navigation.getParam("id", "no workout ID found");
+    const userId = navigation.getParam("userId", "no user ID found");
     
     this.setState({
       title: title,
       exercises: exercises,
       modalVisible: false,
-      workoutId: workoutId
+      workoutId: workoutId,
+      userID: userId
     });
   }
 
@@ -61,7 +63,8 @@ class ExerciseList extends Component {
   componentDidUpdate() {
     const { navigation } = this.props;
     const updateWorkout = navigation.getParam("updateWorkout");
-
+    
+    console.log("Ex List - comp did update = updateWorkout passed => ", this.props.workouts)
     updateWorkout(null, this.props.workouts);
     
     
@@ -88,11 +91,14 @@ class ExerciseList extends Component {
 
   // Takes the record of workouts held in local storage and sends them to MongoDB.
   saveToMongo(workoutId) {
+    console.log("exercise-list => Save to mongo fired", "workoutid: ", workoutId)
     let finalVal;
     // Get all values for keys in local storage in the current exercise list.
 
     AsyncStorage.multiGet([], (err, store) => {
       //    Map over the return values array and return just the values.
+      
+      console.log("exercise-list => Save to mongo fired", "store: ", store)
 
       const workoutex = store.map(exercise => {
         if (exercise[1]) {
@@ -101,7 +107,7 @@ class ExerciseList extends Component {
       });
       // put the exercise logs array in an object with a date key
       finalVal = {
-        userID: "01",
+        userID: this.state.userID,
         [Date.now()]: workoutex
       };
     })
@@ -113,7 +119,9 @@ class ExerciseList extends Component {
         const postBody = JSON.stringify({
           workout: finalVal
         });
-
+        
+        console.log("Exercise list => line 118 - POST object - ", JSON.parse(postBody))
+        
         fetch(
           "http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/workout/",
           {

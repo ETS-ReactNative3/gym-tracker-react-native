@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text, AsyncStorage } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import { withNavigation } from 'react-navigation';
-
+import { withNavigation } from "react-navigation";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {addBlankWorkout } from "../../actions/workout-actions";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -13,24 +15,68 @@ class LoginScreen extends Component {
     };
 
     this.signIn = this.signIn.bind(this);
+    this.userRegistered = this.userRegistered.bind(this);
   }
+  
+
+  static navigationOptions = {
+    title: "Sign In"
+  };
 
   signIn() {
     if (this.state.email && this.state.password) {
-      console.log(
-        "User clicked sign in",
-        this.state.email,
-        this.state.password
-      );
+      // Check mongo for match
+
+      const body = {
+        password: this.state.password
+      };
+
+      const stringBody = JSON.stringify(body);
+
+      fetch(
+        `http://ec2-18-185-12-227.eu-central-1.compute.amazonaws.com:3000/user/login/${
+          this.state.email
+        }`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: stringBody
+        }
+      )
+        .then(res => {
+          const resBody = JSON.parse(res._bodyText);
+          console.log("Signin output: ", resBody);
+          if (resBody.authenticated === true) {
+            this.props.addBlankWorkout(resBody.userId)
+            console.log("User signed in GREAT ", resBody);
+            AsyncStorage.setItem("gym-tracker-userId", resBody.userId)
+              .then(() => {
+                
+                this.userRegistered()
+
+              })
+              .catch(err => console.log("error: ", err));
+          } else {
+            
+            alert("Incorrect email or password")
+          }
+        })
+        .catch(err => console.log("Error", err));
     } else {
       alert("Please enter and email and password");
     }
   }
 
+  // userRegistered = (id) => {
+  userRegistered(id) {
+    console.log("userRegistered fired");
+    this.props.navigation.navigate("Home", {});
+  }
+
   render() {
-
-   
-
     return (
       <View>
         <View>
@@ -39,7 +85,7 @@ class LoginScreen extends Component {
             mode="outlined"
             label="Email"
             placeholder="Email"
-            onChangeText={e => this.setState({ email: e })}
+            onChangeText={e => this.setState({ email: e.toLowerCase() })}
             value={this.state.email}
           />
           <TextInput
@@ -53,16 +99,30 @@ class LoginScreen extends Component {
           <Button mode="contained" onPress={() => this.signIn()}>
             Login
           </Button>
-        </View>
-          <Text onPress={() => {
+          <Button
+            mode="contained"
+            onPress={() => {
               this.props.navigation.navigate("Register", {
                 // pass props here
-              })
-          }}>Register</Text>
-        <View />
+                userRegistered: id => this.userRegistered(id)
+              });
+            }}
+          >
+            Register
+          </Button>
+        </View>
       </View>
     );
   }
 }
 
-export default withNavigation(LoginScreen);
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+        {
+            
+            addBlankWorkout
+        },
+        dispatch
+    );
+
+export default withNavigation(connect(null,mapDispatchToProps)(LoginScreen))

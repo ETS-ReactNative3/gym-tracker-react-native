@@ -11,6 +11,9 @@ export default class RegisterScreen extends Component {
     };
     this.signUp = this.signUp.bind(this);
   }
+  static navigationOptions = {
+    title: "Register"
+  };
 
   signUp() {
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -37,7 +40,7 @@ export default class RegisterScreen extends Component {
         
         .then(res => {
            const resBody = JSON.parse(res._bodyText)
-           
+
           if (resBody.length > 0) {
             alert("User already exists");
           } else {
@@ -65,10 +68,18 @@ export default class RegisterScreen extends Component {
                 // // set returned user _id in local storage
                 console.log("User created: ", res)
                 alert("Account created")
-                AsyncStorage.setItem("gym-tracker-userId", res)
+                AsyncStorage.setItem("gym-tracker-userId", res._bodyText)
                 .then(() => {
                     // Call func inside auth/ index passed as props, which checks for local storage again and forwards to workouts screen
-
+                    AsyncStorage.getItem("gym-tracker-userId")
+                    .then(doc => {
+                      console.log("gym-tracker-userId in local storage: ", JSON.parse(doc))
+                      const { navigation } = this.props;
+                      const userRegistered = navigation.getParam("userRegistered");
+                      userRegistered(JSON.parse(doc))
+                    })
+                    .catch(err => console.log("Error: ", err))
+                    
                 })
                 .catch(err => console.log("Error: ", err
                 ))
@@ -95,7 +106,7 @@ export default class RegisterScreen extends Component {
             mode="outlined"
             label="Email"
             placeholder="Email"
-            onChangeText={e => this.setState({ email: e })}
+            onChangeText={e => this.setState({ email: e.toLowerCase() })}
             value={this.state.email}
           />
           <TextInput

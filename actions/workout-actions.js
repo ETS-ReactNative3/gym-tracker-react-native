@@ -25,3 +25,10 @@ export const addExerciseToWorkout = (newExercises) => (
       payload: exercisesToRemove,
     }
   ) 
+
+  export const addBlankWorkout = (userId) => (
+    {
+      type: 'ADD_BLANK_WORKOUT',
+      payload: userId,
+    }
+  ) 
