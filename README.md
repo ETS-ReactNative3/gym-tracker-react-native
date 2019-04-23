@@ -38,4 +38,4 @@ The initial inspiration for this project was to open up my gym data so I can mon
 + Google and Facebook authentication.
 + A web-app to enable access to historical data. 
 
-### Check out the server <a href="https://github.com/dk03/gym-tracker-react-native/blob/master/lessons.md">HERE</a>
+### Check out the server <a href="https://github.com/dk03/gym-tracker-node-server">HERE</a>
